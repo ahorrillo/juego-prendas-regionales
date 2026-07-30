@@ -1,0 +1,483 @@
+<!-- ==========================================
+     COMPONENTE EDITORIAL: VESTIMENTA REGIONAL
+     ========================================== -->
+<div id="regional-dressup-widget" class="dressup-container">
+    <header class="dressup-controls">
+        <div class="control-group">
+            <label for="gender-select">Género:</label>
+            <select id="gender-select">
+                <option value="mujer" selected>Mujer</option>
+                <option value="hombre">Hombre</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label for="region-select">Grupo Regional:</label>
+            <select id="region-select">
+                <option value="all" selected>Todos los grupos</option>
+            </select>
+        </div>
+
+        <button id="reset-btn" class="btn-reset" title="Limpiar vestimenta">
+            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            Reset
+        </button>
+    </header>
+
+    <!-- ZONA CENTRAL: Canvas Virtual Escalado -->
+    <main class="dressup-stage">
+        <!-- Contenedor externo (actúa de ventana de recorte y zona de Drop) -->
+        <div class="stage-outer" id="drop-zone">
+
+            <div class="stage-inner-canvas" id="canvas-2816">
+                <!-- Maniquí base -->
+                <img id="mannequin-bg" src="" alt="Maniquí" class="layer-bg">
+
+                <!-- Capas de ropa (Ahora se posicionan con X e Y) -->
+                <div id="clothes-layers"></div>
+            </div>
+
+            <div class="drop-overlay" id="drop-overlay">Suelta la prenda / Arrastra fuera para quitarla</div>
+        </div>
+    </main>
+
+    <footer class="dressup-carousels" id="carousels-container">
+    </footer>
+
+</div>
+
+<style>
+    /* =========================================
+       CSS SCOPED (Aislado para el componente)
+       ========================================= */
+    #regional-dressup-widget * { box-sizing: border-box; }
+
+    .dressup-container {
+        --primary-color: #2c3e50;
+        --highlight-color: #e74c3c;
+        --bg-color: #f8f9fa;
+        --border-radius: 8px;
+        --ui-font: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        font-family: var(--ui-font);
+        background: var(--bg-color);
+        border: 1px solid #e1e4e8;
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        user-select: none;
+    }
+
+    /* FORZAR EL CURSOR DURANTE EL ARRASTRE */
+    body.is-dressing-up, body.is-dressing-up * { cursor: grabbing !important; }
+
+    .dressup-controls {
+        display: flex; flex-wrap: wrap; gap: 15px; padding: 15px 20px;
+        background: #fff; border-bottom: 1px solid #e1e4e8; align-items: center; justify-content: center; z-index: 10;
+    }
+    .dressup-controls .control-group { display: flex; align-items: center; gap: 8px; }
+    .dressup-controls label { font-size: 0.9rem; font-weight: 600; color: var(--primary-color); }
+    .dressup-controls select, .btn-reset { padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; cursor: pointer; }
+    .btn-reset { display: flex; align-items: center; gap: 6px; background: var(--primary-color); color: #fff; border: none; margin-left: auto; }
+    .btn-reset:hover { background: #1a252f; }
+
+    /* ZONA CENTRAL */
+    .dressup-stage { width: 100%; background: #eef1f5; padding: 0; }
+
+    .stage-outer {
+        position: relative; width: 100%; overflow: hidden; transition: box-shadow 0.2s;
+    }
+
+    .stage-inner-canvas {
+        position: absolute; top: 0; left: 0; width: 2816px; height: 1536px;
+        transform-origin: top left;
+    }
+
+    .stage-inner-canvas img {
+        position: absolute; top: 0; left: 0; pointer-events: none;
+    }
+    .layer-bg { z-index: 1; }
+
+    /* Ropa en el lienzo: Ahora permite ser agarrada */
+    .stage-inner-canvas img.equipped-item {
+        pointer-events: auto; /* Permite interacción */
+        cursor: grab;
+    }
+    .stage-inner-canvas img.equipped-item:active {
+        cursor: grabbing;
+    }
+
+    /* Overlay visual al pasar por encima */
+    .stage-outer.drag-over .drop-overlay { opacity: 1; }
+    .drop-overlay {
+        position: absolute; inset: 0; background: rgba(231, 76, 60, 0.15); display: flex;
+        align-items: center; justify-content: center; font-weight: bold; color: var(--highlight-color);
+        font-size: 1.5rem; opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 100;
+        text-transform: uppercase; letter-spacing: 1px;
+    }
+
+    /* CARRUSELES */
+    .dressup-carousels { padding: 20px; background: #fff; border-top: 1px solid #e1e4e8; display: flex; flex-direction: column; gap: 15px; }
+    .carousel-row { display: flex; align-items: center; gap: 10px; }
+    .carousel-title { min-width: 110px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; color: #7f8c8d; text-align: right; }
+    .carousel-row.is-next .carousel-title { color: var(--highlight-color); }
+    .carousel-row.is-next .carousel-track { border-color: rgba(231, 76, 60, 0.3); background: rgba(231, 76, 60, 0.02); }
+    .carousel-track { display: flex; flex: 1; gap: 10px; overflow-x: auto; padding: 10px; border: 1px solid transparent; border-radius: var(--border-radius); scrollbar-width: thin; scroll-snap-type: x mandatory; }
+
+    .item-thumbnail {
+        width: 70px; height: 70px; flex-shrink: 0; background: #f1f2f6; border: 2px solid #dcdde1; border-radius: 8px; cursor: grab;
+        scroll-snap-align: start; display: flex; align-items: center; justify-content: center; overflow: hidden;
+        touch-action: pan-x;
+    }
+    .item-thumbnail:active { cursor: grabbing; }
+    .item-thumbnail.is-equipped { opacity: 0.4; filter: grayscale(100%); }
+    .item-thumbnail img { width: 100%; height: 100%; object-fit: contain; transform: scale(3.5); pointer-events: none; }
+
+    /* Clon fantasma del carrusel */
+    .drag-clone {
+        position: fixed; width: 120px; height: 120px; object-fit: contain; pointer-events: none; z-index: 99999;
+        transform: translate(-50%, -50%); filter: drop-shadow(0 15px 25px rgba(0,0,0,0.4)); opacity: 0.95;
+    }
+
+    @media (max-width: 768px) {
+        .dressup-controls { justify-content: flex-start; }
+        .btn-reset { margin-left: 0; width: 100%; justify-content: center; }
+        .carousel-row { flex-direction: column; align-items: flex-start; gap: 5px; }
+        .carousel-title { text-align: left; }
+    }
+</style>
+
+<script>
+    (function() {
+        const config = {
+            baseUrl: 'https://servicios.hoy.es/recursos/juegos/prendas_regionales/',
+            regions: [
+                { id: 'badajoz-gala', name: 'Badajoz - Gala' },
+                { id: 'caceres-gala', name: 'Cáceres - Gala' }
+            ],
+            genders: {
+                mujer: {
+                    bg: 'maniqui-mujer.png',
+                    types: [
+                        { id: 'medias', label: 'Medias', zIndex: 2 },
+                        { id: 'camisa', label: 'Camisa', zIndex: 3 },
+                        { id: 'falda', label: 'Falda', zIndex: 4 },
+                        { id: 'zapatos', label: 'Zapatos', zIndex: 5 },
+                        { id: 'complementos', label: 'Complementos', zIndex: 6 },
+                        { id: 'cabeza', label: 'Cabeza', zIndex: 7 },
+                        { id: 'accesorio', label: 'Accesorio', zIndex: 8 }
+                    ]
+                },
+                hombre: {
+                    bg: 'maniqui-hombre.png',
+                    types: [
+                        { id: 'pantalon', label: 'Pantalón', zIndex: 2 },
+                        { id: 'camisa', label: 'Camisa', zIndex: 3 },
+                        { id: 'faja', label: 'Faja', zIndex: 4 },
+                        { id: 'zapatos', label: 'Zapatos', zIndex: 5 },
+                        { id: 'accesorio', label: 'Accesorio', zIndex: 6 }
+                    ]
+                }
+            }
+        };
+
+        // El estado ahora guarda la región y sus coordenadas { regionId, x, y }
+        let state = { gender: 'mujer', region: 'all', equipped: {} };
+
+        let thumbDrag = null; // Para arrastrar desde la rueda
+        let canvasDrag = null; // Para arrastrar ropa ya equipada en el lienzo
+
+        const dom = {
+            widgetContainer: document.getElementById('regional-dressup-widget'),
+            genderSel: document.getElementById('gender-select'),
+            regionSel: document.getElementById('region-select'),
+            resetBtn: document.getElementById('reset-btn'),
+            mannequinBg: document.getElementById('mannequin-bg'),
+            clothesLayers: document.getElementById('clothes-layers'),
+            carouselsContainer: document.getElementById('carousels-container'),
+            stageOuter: document.getElementById('drop-zone'),
+            canvas2816: document.getElementById('canvas-2816')
+        };
+
+        function init() {
+            populateRegions();
+            bindEvents();
+            setupCanvasScaling();
+            renderApp();
+        }
+
+        function updateCanvasScale() {
+            const availableWidth = dom.stageOuter.clientWidth;
+            const ratio = availableWidth / 2816;
+            dom.canvas2816.style.transform = `scale(${ratio})`;
+            dom.stageOuter.style.height = `${1536 * ratio}px`;
+        }
+
+        function setupCanvasScaling() {
+            const resizeObserver = new ResizeObserver(() => updateCanvasScale());
+            resizeObserver.observe(dom.widgetContainer);
+            updateCanvasScale();
+        }
+
+        function populateRegions() {
+            config.regions.forEach(reg => {
+                const opt = document.createElement('option');
+                opt.value = reg.id;
+                opt.textContent = reg.name;
+                dom.regionSel.appendChild(opt);
+            });
+        }
+
+        function bindEvents() {
+            dom.genderSel.addEventListener('change', (e) => {
+                state.gender = e.target.value; state.equipped = {}; renderApp();
+            });
+            dom.regionSel.addEventListener('change', (e) => {
+                state.region = e.target.value; renderCarousels();
+            });
+            dom.resetBtn.addEventListener('click', () => {
+                state.equipped = {}; renderApp();
+            });
+        }
+
+        function renderApp() {
+            dom.mannequinBg.src = `${config.baseUrl}${config.genders[state.gender].bg}`;
+            renderEquippedClothes();
+            renderCarousels();
+        }
+
+        function renderCarousels() {
+            dom.carouselsContainer.innerHTML = '';
+            const types = config.genders[state.gender].types;
+            const sortedTypes = [...types].sort((a,b) => a.zIndex - b.zIndex);
+            const nextTypeToEquip = sortedTypes.find(t => !state.equipped[t.id]);
+
+            types.forEach(typeDef => {
+                const row = document.createElement('div');
+                row.className = 'carousel-row';
+                if (nextTypeToEquip && nextTypeToEquip.id === typeDef.id) row.classList.add('is-next');
+
+                const title = document.createElement('div');
+                title.className = 'carousel-title';
+                title.textContent = typeDef.label;
+
+                const track = document.createElement('div');
+                track.className = 'carousel-track';
+
+                const regionsToShow = state.region === 'all' ? config.regions.map(r => r.id) : [state.region];
+                regionsToShow.forEach(regionId => {
+                    track.appendChild(buildThumbnail(typeDef, regionId));
+                });
+
+                row.appendChild(title);
+                row.appendChild(track);
+                dom.carouselsContainer.appendChild(row);
+            });
+        }
+
+        function buildThumbnail(typeDef, regionId) {
+            const el = document.createElement('div');
+            el.className = 'item-thumbnail';
+            if (state.equipped[typeDef.id]?.regionId === regionId) el.classList.add('is-equipped');
+
+            const imgUrl = `${config.baseUrl}${regionId}-${state.gender}-${typeDef.id}.png`;
+            el.innerHTML = `<img src="${imgUrl}" alt="${typeDef.label}">`;
+
+            // EVENTO ARRASTRAR DESDE LA RUEDA
+            el.addEventListener('pointerdown', (e) => {
+                if (e.pointerType === 'mouse' && e.button !== 0) return;
+                e.preventDefault();
+                startThumbDrag(e, typeDef.id, regionId, imgUrl);
+            });
+
+            return el;
+        }
+
+        /* ========================================================
+           1. MOTOR DE ARRASTRE: DESDE LA RUEDA AL LIENZO
+           ======================================================== */
+        function startThumbDrag(e, typeId, regionId, imgUrl) {
+            const clone = document.createElement('img');
+            clone.src = imgUrl;
+            clone.className = 'drag-clone';
+
+            thumbDrag = {
+                typeId, regionId, clone,
+                startX: e.clientX, startY: e.clientY,
+                isDragging: false
+            };
+
+            document.body.classList.add('is-dressing-up');
+            document.addEventListener('pointermove', onThumbMove);
+            document.addEventListener('pointerup', onThumbUp);
+        }
+
+        function onThumbMove(e) {
+            if (!thumbDrag) return;
+            if (!thumbDrag.isDragging) {
+                const dx = Math.abs(e.clientX - thumbDrag.startX);
+                const dy = Math.abs(e.clientY - thumbDrag.startY);
+                if (dx > 5 || dy > 5) {
+                    thumbDrag.isDragging = true;
+                    document.body.appendChild(thumbDrag.clone);
+                }
+            }
+
+            if (thumbDrag.isDragging) {
+                thumbDrag.clone.style.left = `${e.clientX}px`;
+                thumbDrag.clone.style.top = `${e.clientY}px`;
+
+                const rect = dom.stageOuter.getBoundingClientRect();
+                if (e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom) {
+                    dom.stageOuter.classList.add('drag-over');
+                } else {
+                    dom.stageOuter.classList.remove('drag-over');
+                }
+            }
+        }
+
+        function onThumbUp(e) {
+            if (!thumbDrag) return;
+            const rect = dom.stageOuter.getBoundingClientRect();
+            const isInside = (e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom);
+
+            if (!thumbDrag.isDragging) {
+                // Clic rápido en la rueda: Poner / Quitar (Cae por defecto en 0,0)
+                if (state.equipped[thumbDrag.typeId]?.regionId === thumbDrag.regionId) {
+                    delete state.equipped[thumbDrag.typeId];
+                } else {
+                    state.equipped[thumbDrag.typeId] = { regionId: thumbDrag.regionId, x: 0, y: 0 };
+                }
+            } else {
+                // Soltado tras arrastrar: Si es dentro del lienzo, lo equipamos alineado al centro perfecto
+                if (isInside) {
+                    state.equipped[thumbDrag.typeId] = { regionId: thumbDrag.regionId, x: 0, y: 0 };
+                }
+            }
+
+            renderEquippedClothes();
+            renderCarousels();
+
+            if (thumbDrag.clone.parentNode) thumbDrag.clone.remove();
+            dom.stageOuter.classList.remove('drag-over');
+            document.body.classList.remove('is-dressing-up');
+            document.removeEventListener('pointermove', onThumbMove);
+            document.removeEventListener('pointerup', onThumbUp);
+            thumbDrag = null;
+        }
+
+        /* ========================================================
+           2. MOTOR DE ARRASTRE: LIBRE DENTRO DEL LIENZO
+           ======================================================== */
+        function renderEquippedClothes() {
+            dom.clothesLayers.innerHTML = '';
+            const types = config.genders[state.gender].types;
+            types.forEach(typeDef => {
+                const itemData = state.equipped[typeDef.id];
+                if (itemData) {
+                    const img = document.createElement('img');
+                    img.src = `${config.baseUrl}${itemData.regionId}-${state.gender}-${typeDef.id}.png`;
+                    img.style.zIndex = typeDef.zIndex;
+                    img.alt = typeDef.label;
+                    img.className = 'equipped-item';
+
+                    // Aplicamos las coordenadas X e Y relativas al lienzo
+                    img.style.left = `${itemData.x}px`;
+                    img.style.top = `${itemData.y}px`;
+
+                    // Al pulsar sobre la prenda en el lienzo
+                    img.addEventListener('pointerdown', (e) => {
+                        if (e.pointerType === 'mouse' && e.button !== 0) return;
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        const scale = dom.stageOuter.clientWidth / 2816;
+
+                        canvasDrag = {
+                            typeId: typeDef.id,
+                            img: img,
+                            startX: e.clientX,
+                            startY: e.clientY,
+                            initialX: itemData.x,
+                            initialY: itemData.y,
+                            scale: scale,
+                            isDragging: false
+                        };
+
+                        document.body.classList.add('is-dressing-up');
+                        document.addEventListener('pointermove', onCanvasMove);
+                        document.addEventListener('pointerup', onCanvasUp);
+                    });
+
+                    dom.clothesLayers.appendChild(img);
+                }
+            });
+        }
+
+        function onCanvasMove(e) {
+            if (!canvasDrag) return;
+
+            if (!canvasDrag.isDragging) {
+                const dx = Math.abs(e.clientX - canvasDrag.startX);
+                const dy = Math.abs(e.clientY - canvasDrag.startY);
+                if (dx > 3 || dy > 3) {
+                    canvasDrag.isDragging = true;
+                    canvasDrag.img.style.zIndex = 999; // La traemos al frente mientras se mueve
+                }
+            }
+
+            if (canvasDrag.isDragging) {
+                // Calculamos cuánto se ha movido el ratón, ajustado a la escala del lienzo
+                const deltaX = (e.clientX - canvasDrag.startX) / canvasDrag.scale;
+                const deltaY = (e.clientY - canvasDrag.startY) / canvasDrag.scale;
+
+                // Movemos la imagen en tiempo real
+                canvasDrag.img.style.left = `${canvasDrag.initialX + deltaX}px`;
+                canvasDrag.img.style.top = `${canvasDrag.initialY + deltaY}px`;
+
+                const rect = dom.stageOuter.getBoundingClientRect();
+                if (e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom) {
+                    dom.stageOuter.classList.add('drag-over');
+                } else {
+                    dom.stageOuter.classList.remove('drag-over');
+                }
+            }
+        }
+
+        function onCanvasUp(e) {
+            if (!canvasDrag) return;
+
+            if (canvasDrag.isDragging) {
+                const rect = dom.stageOuter.getBoundingClientRect();
+                const isInside = (e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom);
+
+                if (isInside) {
+                    // Si soltó dentro, guardamos la nueva posición exacta en el estado
+                    const deltaX = (e.clientX - canvasDrag.startX) / canvasDrag.scale;
+                    const deltaY = (e.clientY - canvasDrag.startY) / canvasDrag.scale;
+                    state.equipped[canvasDrag.typeId].x = canvasDrag.initialX + deltaX;
+                    state.equipped[canvasDrag.typeId].y = canvasDrag.initialY + deltaY;
+                } else {
+                    // Si la arrastró fuera del lienzo, la desviste
+                    delete state.equipped[canvasDrag.typeId];
+                }
+            }
+
+            dom.stageOuter.classList.remove('drag-over');
+            document.body.classList.remove('is-dressing-up');
+            document.removeEventListener('pointermove', onCanvasMove);
+            document.removeEventListener('pointerup', onCanvasUp);
+            canvasDrag = null;
+
+            // Repintamos para restaurar Z-Index y el estado limpio
+            renderEquippedClothes();
+            renderCarousels();
+        }
+
+        init();
+    })();
+</script>
