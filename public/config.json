@@ -1,0 +1,30 @@
+{
+  "baseUrl": "https://raw.githubusercontent.com/ahorrillo/juego-prendas-regionales/refs/heads/main/img/",
+  "regions": [
+    { "id": "badajoz-gala", "name": "Badajoz - Gala" }
+  ],
+  "genders": {
+    "mujer": {
+      "bg": "maniqui-mujer.png",
+      "types": [
+        { "id": "medias", "label": "Medias", "zIndex": 2 },
+        { "id": "camisa", "label": "Camisa", "zIndex": 3 },
+        { "id": "falda", "label": "Falda", "zIndex": 4 },
+        { "id": "zapatos", "label": "Zapatos", "zIndex": 5 },
+        { "id": "complementos", "label": "Complementos", "zIndex": 6 },
+        { "id": "cabeza", "label": "Cabeza", "zIndex": 7 },
+        { "id": "accesorio", "label": "Accesorio", "zIndex": 8 }
+      ]
+    },
+    "hombre": {
+      "bg": "maniqui-hombre.png",
+      "types": [
+        { "id": "pantalon", "label": "Pantalón", "zIndex": 2 },
+        { "id": "camisa", "label": "Camisa", "zIndex": 3 },
+        { "id": "faja", "label": "Faja", "zIndex": 4 },
+        { "id": "zapatos", "label": "Zapatos", "zIndex": 5 },
+        { "id": "accesorio", "label": "Accesorio", "zIndex": 6 }
+      ]
+    }
+  }
+}
