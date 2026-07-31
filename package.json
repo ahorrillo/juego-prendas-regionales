@@ -9,8 +9,6 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "esbuild": "^0.28.1",
-    "vite": "^8.2.0",
-    "vite-plugin-css-injected-by-js": "^5.0.2"
+    "vite": "^8.2.0"
   }
 }

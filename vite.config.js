@@ -1,12 +1,8 @@
 import { defineConfig } from 'vite';
-import cssInjectedByJS from 'vite-plugin-css-injected-by-js';
 
 export default defineConfig({
-  plugins: [
-    cssInjectedByJS()
-  ],
   build: {
-    minify: 'esbuild',
+    minify: true, // Usa el minificador por defecto (sin requerir esbuild externo)
     lib: {
       entry: 'src/main.js',
       name: 'RegionalDressupWidget',
@@ -15,7 +11,6 @@ export default defineConfig({
     },
     rollupOptions: {
       output: {
-        // Forzamos a que empaquete todo sin importaciones externas
         inlineDynamicImports: true
       }
     }
