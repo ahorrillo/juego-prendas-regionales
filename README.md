@@ -1,6 +1,11 @@
 # 👗 Vestimenta Regional — Componente Web Interactivo
 
-Un widget interactivo estilo *Paper Dolls* (juego de vestir) desarrollado en **Vanilla JavaScript**, **CSS3** y **HTML5**, diseñado para la difusión cultural o probadores virtuales.
+[![Vite](https://img.shields.io/badge/Vite-ES6+-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Vanilla JS](https://img.shields.io/badge/Vanilla_JS-Zero_Dependencies-F7DF1E?logo=javascript&logoColor=black)](https://developer.mozilla.org/
+[![jsDelivr CDN](https://img.shields.io/badge/jsDelivr-v1.0.7-E24D4B?logo=jsdelivr&logoColor=white)](https://www.jsdelivr.com/package/gh/
+[![Vocento](https://img.shields.io/badge/Licencia-Vocento-002D62?style=flat-square)](https://www.vocento.com/)
+
+Un widget interactivo estilo *Paper Dolls* (juego de vestir) desarrollado en **Vanilla JavaScript ES6+**, **CSS Scoped** y empaquetado con **Vite**, diseñado para la difusión cultural, museos digitales o probadores virtuales.
 
 Permite vestir maniquíes (masculinos y femeninos) combinando prendas tradicionales por capas mediante un motor de físicas de puntero (*Pointer Events*) y un sistema de lienzo con escalado matemático vectorial.
 
@@ -8,119 +13,162 @@ Permite vestir maniquíes (masculinos y femeninos) combinando prendas tradiciona
 
 ## 🌟 Características Principales
 
-* **📐 Canvas Virtual Escalado (2816x1536 px):** Resuelve el problema de alineación de capas en resoluciones fluidas. Mantiene la relación de aspecto y escala todas las prendas y maniquíes a la misma tasa mediante `transform: scale()`.
+* **📐 Canvas Virtual Escalado (2816x1536 px):** Resuelve el problema de alineación de capas en resoluciones fluidas. Mantiene la relación de aspecto y escala todas las prendas y maniquíes a la misma tasa mediante transformaciones vectoriales `scale()`.
 * **🖐️ Motor de Arrastre Libre (Pointer Events):**
-  * **Desde la rueda/carrusel:** Arrastra prendas al maniquí o haz un clic rápido para equiparlas.
+  * **Desde el carrusel:** Arrastra prendas al maniquí o haz un clic rápido para equiparlas.
   * **En el lienzo (Canvas):** Agarra ropa ya equipada para ajustar su posición exacta con la mano.
   * **Desvestir:** Arrastra una prenda fuera de la zona del maniquí para quitarla.
 * **📱 100% Táctil y Responsive:** Optimizado para smartphones, tablets y escritorio. Soporta gestos multitáctiles sin interferir con el scroll de la página.
-* **🎨 Gestión Inteligente de Capas (Z-Index):** Sistema automático de ordenación de capas (medias -> camisa -> falda -> accesorios) garantizando coherencia visual.
-* **⚡ Sin Dependencias:** Escrito en JS puro (*Zero dependencies*). Ligero, ultra rápido e integrable en cualquier CMS (WordPress, Drupal, etc.).
+* **📦 Empaquetado Autónomo (IIFE + Inline CSS):** Se compila en un único archivo JavaScript (`widget.js`) que inyecta su propio CSS y lógica de forma aislada, evitando conflictos con estilos globales de la web receptora y sobrepasando bloqueos de gestores de consentimiento de cookies (*Cookie Walls*).
+* **⚡ Sin Dependencias en Producción:** Escrito en Vanilla JS puro (*Zero dependencies*). Ligero, ultra rápido e integrable en cualquier CMS (WordPress, Drupal, Joomla, etc.).
 
 ---
 
 ## 🛠️ Arquitectura y Funcionamiento Técnico
 
-### El problema del Ratio y la solución del Canvas Virtual
+### 1. El problema del Ratio y la solución del Canvas Virtual
 
-> **Desafío:** Al reducir el contenedor base (por ejemplo a 800px de ancho), aplicar CSS porcentual a imágenes recortadas de ropa rompe la alineación con el maniquí.
->
-> **Solución:** Las imágenes se cargan en su tamaño nativo en un lienzo interno fijo de **2816×1536 px**. Un `ResizeObserver` calcula el ratio de reducción (ancho disponible / 2816) y aplica una transformación vectorial unificada a todo el lienzo:
+**Desafío:** Al reducir el contenedor base (por ejemplo a 800px de ancho), aplicar CSS porcentual a imágenes recortadas de ropa rompe la alineación con el maniquí.
 
-~~~js
+**Solución:** Las imágenes se cargan en su tamaño nativo en un lienzo interno fijo de **2816×1536 px**. Un `ResizeObserver` calcula el ratio de reducción (ancho disponible / 2816) y aplica una transformación vectorial unificada a todo el lienzo:
+
+```javascript
 const ratio = disponibleWidth / 2816;
 canvas2816.style.transform = `scale(${ratio})`;
 stageOuter.style.height = `${1536 * ratio}px`;
-~~~
+```
+
+### 2. Aislamiento e Inyección CSS
+
+El CSS no se distribuye como un archivo separado. Durante la compilación con Vite, los estilos se procesan de forma *inline* e inyectan dinámicamente en el `<head>` del DOM únicamente si no existen previamente (`#rjw-styles`), garantizando que la aplicación sea 100% *plug and play*.
 
 ---
 
 ## 📁 Estructura del Proyecto
 
-~~~text
+```text
 .
-├── index.html          # Estructura del Widget HTML
-├── styles.css          # Estilos aislados (Scoped CSS) + Animaciones
-├── app.js              # Lógica de componentes, Drag&Drop y Canvas Engine
-└── README.md           # Documentación del proyecto
-~~~
+├── src/
+│   ├── components/
+│   │   ├── gameLogic.js      # Lógica de arrastre (Pointer Events), canvas y estados
+│   │   └── htmlTemplate.js   # Generación de la plantilla HTML del widget
+│   ├── styles.css            # Estilos del widget aislados (prefijo rjw-)
+│   └── main.js               # Punto de entrada principal e inyector del widget
+├── dist/                     # Archivos compilados listos para producción
+│   ├── config.json           # Configuración remota de prendas, regiones y rutas
+│   └── widget.js             # Bundle único empaquetado en formato IIFE
+├── index.html                # Entorno de desarrollo local
+├── vite.config.js            # Configuración de compilación Vite (Formato IIFE)
+├── package.json
+└── README.md
+```
 
 ---
 
-## 🚀 Instalación y Uso
+## 🚀 Desarrollo Local y Compilación
 
-### 1. Clonar el repositorio
+### 1. Clonar el repositorio e instalar dependencias
 
-~~~bash
-git clone https://github.com/tu-usuario/vestimenta-regional.git
-cd vestimenta-regional
-~~~
+```bash
+git clone [https://github.com/ahorrillo/juego-prendas-regionales.git](https://github.com/ahorrillo/juego-prendas-regionales.git)
+cd juego-prendas-regionales
+npm install
+```
 
-### 2. Integración en tu Web
+### 2. Servidor de desarrollo
 
-Simplemente copia el contenedor `#regional-dressup-widget` junto con sus estilos y script en tu proyecto:
+```bash
+npm run dev
+```
 
-~~~html
-<div id="regional-dressup-widget" class="dressup-container">
+### 3. Compilación para producción
+
+```bash
+npm run build
+```
+
+Genera el archivo bundle `dist/widget.js` compilado en formato **IIFE** listo para ser servido en producción.
+
+---
+
+## 🌐 Integración en tu Web (Producción)
+
+Para integrar el widget en cualquier sitio web, añade el contenedor con la ruta a tu `config.json` e inyecta el script desde **jsDelivr** haciendo referencia a una versión/tag específica:
+
+```html
+<!-- 1. Contenedor del Widget -->
+<div id="regional-dressup-widget"
+     data-config-url="[https://cdn.jsdelivr.net/gh/ahorrillo/juego-prendas-regionales@v1.0.7/dist/config.json](https://cdn.jsdelivr.net/gh/ahorrillo/juego-prendas-regionales@v1.0.7/dist/config.json)">
 </div>
 
-<style>
-</style>
+<!-- 2. Script del Widget -->
+<script src="[https://cdn.jsdelivr.net/gh/ahorrillo/juego-prendas-regionales@v1.0.7/dist/widget.js](https://cdn.jsdelivr.net/gh/ahorrillo/juego-prendas-regionales@v1.0.7/dist/widget.js)"></script>
+```
 
-<script>
-</script>
-~~~
-
-~~~html
-<!-- Ambos dentro de dist -->
-<div id="regional-dressup-widget" data-config-url="https://raw.githubusercontent.com/ahorrillo/juego-prendas-regionales/main/dist/config.json">
-</div><script src="https://raw.githubusercontent.com/ahorrillo/juego-prendas-regionales/main/dist/widget.js"></script>
-~~~
-
-~~~html
-<div id="regional-dressup-widget" data-config-url="https://cdn.jsdelivr.net/gh/ahorrillo/juego-prendas-regionales@main/dist/config.json"></div>
-<script src="https://cdn.jsdelivr.net/gh/ahorrillo/juego-prendas-regionales@main/dist/widget.js"></script>
-~~~
-
-~~~html
-<div id="regional-dressup-widget" data-config-url="https://cdn.jsdelivr.net/gh/ahorrillo/juego-prendas-regionales@main/config.json"></div>
-<script data-cookieconsent="ignore" type="text/javascript" src="https://cdn.jsdelivr.net/gh/ahorrillo/juego-prendas-regionales@main/dist/widget.js?v1.0.3"></script>
-~~~
+> **Nota importante:** Se recomienda utilizar siempre un **Tag de Git** (ej: `@v1.0.7`) en las URLs de jsDelivr en lugar de `@main` para evitar retrasos en la actualización por caché de CDN.
 
 ---
 
-## ⚙️ Configuración y Personalización
+## ⚙️ Configuración y Personalización (`config.json`)
 
-Puedes añadir nuevos trajes, regiones o géneros modificando el objeto de configuración inicial en JavaScript:
+Puedes añadir o editar nuevos trajes, regiones, capas o géneros modificando el archivo `config.json`:
 
-~~~javascript
-const config = {
-    baseUrl: 'https://tu-servidor.com/imagenes_prendas/',
-    regions: [
-        { id: 'badajoz-gala', name: 'Badajoz - Gala' },
-        { id: 'caceres-traje', name: 'Cáceres - Tradicional' }
-    ],
-    genders: {
-        mujer: {
-            bg: 'maniqui-mujer.png',
-            types: [
-                { id: 'medias', label: 'Medias', zIndex: 2 },
-                { id: 'camisa', label: 'Camisa', zIndex: 3 },
-                { id: 'falda', label: 'Falda', zIndex: 4 },
-                { id: 'cabeza', label: 'Cabeza', zIndex: 7 }
-            ]
-        }
+```json
+{
+  "baseUrl": "[https://raw.githubusercontent.com/ahorrillo/juego-prendas-regionales/main/img/](https://raw.githubusercontent.com/ahorrillo/juego-prendas-regionales/main/img/)",
+  "regions": [
+    { "id": "badajoz-gala", "name": "Badajoz - Gala" },
+    { "id": "caceres-traje", "name": "Cáceres - Tradicional" }
+  ],
+  "genders": {
+    "mujer": {
+      "bg": "maniqui-mujer.png",
+      "types": [
+        { "id": "medias", "label": "Medias", "zIndex": 2 },
+        { "id": "camisa", "label": "Camisa", "zIndex": 3 },
+        { "id": "falda", "label": "Falda", "zIndex": 4 },
+        { "id": "cabeza", "label": "Cabeza", "zIndex": 7 }
+      ]
+    },
+    "hombre": {
+      "bg": "maniqui-hombre.png",
+      "types": [
+        { "id": "calzas", "label": "Calzas", "zIndex": 2 },
+        { "id": "camisa", "label": "Camisa", "zIndex": 3 },
+        { "id": "chaleco", "label": "Chaleco", "zIndex": 4 }
+      ]
     }
-};
-~~~
+  }
+}
+```
 
 ### Nomenclatura de Archivos de Imagen
 
-El sistema construye las URLs dinámicamente siguiendo este patrón:
+El sistema construye las URLs dinámicamente siguiendo el estándar:
 
 `[baseUrl][regionId]-[gender]-[typeId].png`
 
-*Ejemplo:* `https://.../badajoz-gala-mujer-camisa.png`
+*Ejemplo:* `https://.../img/badajoz-gala-mujer-camisa.png`
+
+---
+
+## 🔖 Control de Versiones y Despliegue
+
+Para publicar una nueva versión del widget:
+
+```bash
+# 1. Compilar bundle
+npm run build
+
+# 2. Guardar cambios en Git
+git add .
+git commit -m "Publicada nueva versión v1.0.7"
+git push origin main
+
+# 3. Crear y publicar Tag
+git tag v1.0.7
+git push origin v1.0.7
+```
 
 ---
 
@@ -135,6 +183,23 @@ El sistema construye las URLs dinámicamente siguiendo este patrón:
 
 ---
 
-## 📄 Licencia
+## ✒️ Autores
 
-Este proyecto está bajo la Licencia **MIT**. Puedes usarlo, modificarlo y distribuirlo libremente para proyectos personales o comerciales.
+Creado y mantenido por:
+
+**María Díaz Sanchez** <maria.diaz@hoy.es> | [GitHub](https://github.com/maria-diaz-hoy)
+
+**Antonio Horrillo Horrillo**. <ahorrillo@hoy.es> | [GitHub](https://github.com/ahorrillo)
+
+Orgullosamente desarrollado DESDE CERO por el equipo de HOY.es
+
+---
+
+## 📄 Licencia y Términos de Uso
+
+Este software ha sido desarrollado por y para el uso exclusivo de las cabeceras y servicios del grupo **Vocento**.
+
+- **Propiedad:** © 2026 **Vocento**. Todos los derechos reservados.
+- **Licencia:** Privativa (uso interno).
+
+Queda estrictamente prohibida la reproducción, distribución, modificación o comunicación pública, total o parcial, de este código fuente a terceros ajenos al Grupo Vocento sin el consentimiento expreso y por escrito de la dirección tecnológica.
