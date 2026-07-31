@@ -6,11 +6,18 @@ export default defineConfig({
     cssInjectedByJS()
   ],
   build: {
+    minify: 'esbuild',
     lib: {
       entry: 'src/main.js',
       name: 'RegionalDressupWidget',
       fileName: () => 'widget.js',
-      formats: ['iife']
+      formats: ['umd']
+    },
+    rollupOptions: {
+      output: {
+        // Forzamos a que empaquete todo sin importaciones externas
+        inlineDynamicImports: true
+      }
     }
   }
 });

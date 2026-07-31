@@ -74,9 +74,17 @@ Simplemente copia el contenedor `#regional-dressup-widget` junto con sus estilos
 ~~~html
 <!-- Ambos dentro de dist -->
 <div id="regional-dressup-widget" data-config-url="https://raw.githubusercontent.com/ahorrillo/juego-prendas-regionales/main/dist/config.json">
-</div>
+</div><script src="https://raw.githubusercontent.com/ahorrillo/juego-prendas-regionales/main/dist/widget.js"></script>
+~~~
 
-<script src="https://raw.githubusercontent.com/ahorrillo/juego-prendas-regionales/main/dist/widget.js"></script>
+~~~html
+<div id="regional-dressup-widget" data-config-url="https://cdn.jsdelivr.net/gh/ahorrillo/juego-prendas-regionales@main/dist/config.json"></div>
+<script src="https://cdn.jsdelivr.net/gh/ahorrillo/juego-prendas-regionales@main/dist/widget.js"></script>
+~~~
+
+~~~html
+<div id="regional-dressup-widget" data-config-url="https://cdn.jsdelivr.net/gh/ahorrillo/juego-prendas-regionales@main/config.json"></div>
+<script data-cookieconsent="ignore" type="text/javascript" src="https://cdn.jsdelivr.net/gh/ahorrillo/juego-prendas-regionales@main/dist/widget.js?v1.0.3"></script>
 ~~~
 
 ---

@@ -1,3 +1,4 @@
+alert('Widget: Cargando widget de vestimenta regional...');
 import './styles.css';
 import { getWidgetHTML } from './components/htmlTemplate.js';
 import { initGame } from './components/gameLogic.js';
