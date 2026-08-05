@@ -42,6 +42,10 @@ stageOuter.style.height = `${1536 * ratio}px`;
 
 El CSS no se distribuye como un archivo separado. Durante la compilación con Vite, los estilos se procesan de forma *inline* e inyectan dinámicamente en el `<head>` del DOM únicamente si no existen previamente (`#dressup-styles`), garantizando que la aplicación sea 100% *plug and play*.
 
+Para resistir los estilos globales hostiles de los CMS donde se embebe (que suelen alterar elementos genéricos como `button` o `ul` / `li`), **todas las reglas de CSS se encuentran fuertemente blindadas**:
+* **Ámbito obligatorio:** Cada regla de estilo se encuentra prefijada por el ID contenedor `#regional-dressup-widget` (por ejemplo, `#regional-dressup-widget .btn-reset`), elevando la especificidad del selector a niveles insalvables por la hoja de estilos global.
+* **Escudo estructural (`!important`):** Las propiedades visuales críticas como `display`, `padding`, `margin`, `min-height` y `white-space` están blindadas con `!important` en el selector específico para que no se deformen bajo ninguna circunstancia.
+
 ---
 
 ## 📁 Estructura del Proyecto

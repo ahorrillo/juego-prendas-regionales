@@ -110,7 +110,7 @@ El sistema es plano por defecto: la única profundidad aparece en el fantasma de
 - Género como control segmentado; grupo regional en select con chevron propio.
 - Progreso visible "X de Y piezas" con barra, hasta el estado de traje completo.
 - Canvas virtual 2816×1536 escalado por anchura; capas siempre alineadas.
-- Aislado bajo `#regional-dressup-widget`; el bloqueo de scroll durante el arrastre también está acotado al widget.
+- Aislado bajo `#regional-dressup-widget` con todas sus reglas CSS prefijadas obligatoriamente bajo este selector ID e implementando escudo estructural (`!important` en propiedades críticas como display, padding o white-space) para evitar la deformación por estilos del host; el bloqueo de scroll durante el arrastre también está acotado al widget.
 
 ## Colors
 
@@ -244,4 +244,4 @@ Lenguaje de esquinas suaves y contenidas: 6px para el interior del segmento de g
 - **Don't** hardcodear el orden de las capas: el z-ordering sale de `config.json`.
 - **Don't** introducir fuentes decorativas ni patrones kitsch que compitan con la prenda.
 - **Don't** usar grana puro para texto pequeño sobre blanco (falla AA).
-- **Don't** permitir que el CSS global del host rompa la caja del widget.
+- **Don't** permitir que el CSS global del host rompa la caja del widget (de ahí el uso de prefijado por ID y de flags `!important` en las reglas críticas).
