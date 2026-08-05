@@ -145,7 +145,7 @@ body.is-dressing-up, body.is-dressing-up * { cursor: grabbing !important; }
 #regional-dressup-widget .stage-inner-canvas { position: absolute !important; top: 0 !important; left: 0 !important; width: 2816px !important; height: 1536px !important; transform-origin: top left !important; }
 
 #regional-dressup-widget .stage-inner-canvas img {
-    position: absolute !important; top: 0 !important; left: 0 !important; pointer-events: none !important;
+    position: absolute; top: 0; left: 0; pointer-events: none;
     width: auto !important; height: auto !important; max-width: none !important; max-height: none !important;
     margin: 0 !important; padding: 0 !important; border: none !important; background: transparent !important; box-shadow: none !important;
 }

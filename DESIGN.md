@@ -216,7 +216,7 @@ Lenguaje de esquinas suaves y contenidas: 6px para el interior del segmento de g
 - **Touch:** `touch-action: pan-x` para que el carrusel siga desplazándose sin pelear con el gesto.
 
 ### Equipped Items (maniquí)
-- **Style:** capas absolutas dentro del canvas virtual, ordenadas por `zIndex` del config, cursor grab, `touch-action: none`.
+- **Style:** capas absolutas dentro del canvas virtual, ordenadas por `zIndex` del config, cursor grab, `touch-action: none`. Su posicionamiento (`top`, `left`) y `pointer-events` no deben declararse con `!important` en las reglas genéricas de las imágenes para permitir que el script aplique las coordenadas dinámicas de arrastre y cambie la interactividad.
 - **State:** al arrastrarse suben a `zIndex: 999`; si se sueltan fuera del escenario se quitan.
 
 ### Drop Overlay
