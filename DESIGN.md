@@ -187,14 +187,14 @@ Lenguaje de esquinas suaves y contenidas: 6px para el interior del segmento de g
 - **Semantics:** `role="group"` + `aria-pressed` por botón.
 
 ### Selects (Grupo Regional)
-- **Style:** botón `combobox` propio (no `<select>` nativo) — fondo blanco, texto Noche de Fiesta, borde 1px trazo, radio 8px, padding 10px 34px 10px 12px, altura mínima 42px, ancho completo en móvil (16px para evitar zoom de iOS).
+- **Style:** botón `combobox` propio (no `<select>` nativo) — fondo blanco, texto Noche de Fiesta, borde 1px trazo, radio 8px, padding 10px 34px 10px 12px, altura mínima 42px, ancho completo en móvil (16px para evitar zoom de iOS). Tiene un `min-width: 180px` en escritorio y `white-space: nowrap` con `text-overflow: ellipsis` para prevenir deformación o saltos de línea con textos largos.
 - **Dropdown:** lista `listbox` absoluta dentro del widget (`.select-menu`), con opciones con punto-grana en la seleccionada y resaltado activo por teclado. Se evita el `<select>` nativo porque su menú se abre fuera del marco en la emulación de dispositivo de Chrome DevTools y es sensible a `user-select` en iOS.
 - **Chevron:** SVG propio (chevron acero) que rota 180° al abrir.
 - **Focus/teclado:** outline grana 2px; Enter/Espacio abren, flechas navegan con `aria-activedescendant`, Enter selecciona, Escape cierra y devuelve el foco.
 - **Semantics:** `role="listbox"`/`role="option"`, `aria-expanded`, `aria-controls`, `aria-selected`.
 
 ### Reset Button
-- **Shape:** ghost editorial — fondo blanco, borde 1px trazo, radio 8px, texto noche, icono de papelera SVG inline.
+- **Shape:** ghost editorial — fondo blanco, borde 1px trazo, radio 8px, texto noche, icono de papelera SVG inline. Tiene `white-space: nowrap` y `flex-shrink: 0` tanto en el botón como en su icono SVG interno para impedir la deformidad o el aplastamiento en layouts ajustados.
 - **Hover:** papel + borde tiza-trazo + texto noche profunda.
 - **Mobile:** ancho completo y centrado.
 
