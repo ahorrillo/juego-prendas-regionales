@@ -199,7 +199,7 @@ Lenguaje de esquinas suaves y contenidas: 6px para el interior del segmento de g
 - **Mobile:** ancho completo y centrado.
 
 ### Progress Indicator
-- **Style:** barra pastilla de 6px sobre tiza, relleno grana animado por `transform: scaleX` (nunca por width, para evitar layout thrash), transición 0.35s. Texto meta a la derecha.
+- **Style:** barra pastilla de 6px sobre tiza, relleno grana animado por `transform: scaleX` (nunca por width, para evitar layout thrash y con su propiedad `transform` libre de la regla `!important` para permitir la modificación inline dinámica por JS), transición 0.35s. Texto meta a la derecha.
 - **States:** "X de Y piezas" en acero-tinta; al completar todas las piezas, el texto pasa a grana-tinta con "¡Traje completo!".
 - **Mobile:** la barra se estira a ancho completo de la fila, hasta la etiqueta (sin `max-width`).
 

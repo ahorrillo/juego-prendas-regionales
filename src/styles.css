@@ -120,7 +120,7 @@ body.is-dressing-up, body.is-dressing-up * { cursor: grabbing !important; }
 
 #regional-dressup-widget .progress-dress { display: flex !important; align-items: center !important; gap: 10px !important; margin-left: auto !important; }
 #regional-dressup-widget .progress-track { width: 96px !important; height: 6px !important; border-radius: 999px !important; background: var(--tiza) !important; overflow: hidden !important; }
-#regional-dressup-widget .progress-fill { height: 100% !important; width: 100% !important; background: var(--grana) !important; border-radius: 999px !important; transform-origin: left center !important; transform: scaleX(0) !important; transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important; }
+#regional-dressup-widget .progress-fill { height: 100% !important; width: 100% !important; background: var(--grana) !important; border-radius: 999px !important; transform-origin: left center !important; transform: scaleX(0); transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important; }
 #regional-dressup-widget .progress-label { font-size: 0.8rem !important; font-weight: 600 !important; color: var(--acero-tinta) !important; white-space: nowrap !important; }
 #regional-dressup-widget .progress-dress.is-complete .progress-label { color: var(--grana-tinta) !important; }
 

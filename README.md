@@ -2,7 +2,7 @@
 
 [![Vite](https://img.shields.io/badge/Vite-ES6+-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![Vanilla JS](https://img.shields.io/badge/Vanilla_JS-Zero_Dependencies-F7DF1E?logo=javascript&logoColor=black)](https://developer.mozilla.org/)
-[![jsDelivr CDN](https://img.shields.io/badge/jsDelivr-v1.0.8-E24D4B?logo=jsdelivr&logoColor=white)](https://www.jsdelivr.com/package/gh/)
+[![jsDelivr CDN](https://img.shields.io/badge/jsDelivr-v1.1.4-E24D4B?logo=jsdelivr&logoColor=white)](https://www.jsdelivr.com/package/gh/)
 [![Vocento](https://img.shields.io/badge/Licencia-Vocento-002D62?style=flat-square)](https://www.vocento.com/)
 
 Un widget interactivo estilo *Paper Dolls* (juego de vestir) desarrollado en **Vanilla JavaScript ES6+**, **CSS Scoped** y empaquetado con **Vite**, diseñado para la difusión cultural, museos digitales o probadores virtuales.
