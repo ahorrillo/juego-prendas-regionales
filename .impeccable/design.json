@@ -1,0 +1,251 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-05T00:00:00.000Z",
+  "title": "Design System: Vestimenta Regional — Widget Interactivo",
+  "extensions": {
+    "colorMeta": {
+      "noche-fiesta": {
+        "role": "primary",
+        "displayName": "Noche de Fiesta",
+        "canonical": "#2c3e50",
+        "tonalRamp": ["#0d1320", "#1a2235", "#22304a", "#2c3e50", "#46576d", "#6a7b92", "#98a5b6", "#c6cdd8"]
+      },
+      "noche-fiesta-deep": {
+        "role": "primary",
+        "displayName": "Noche de Fiesta Profunda",
+        "canonical": "#1a252f",
+        "tonalRamp": ["#070b0f", "#0c141b", "#111d27", "#162231", "#1a252f", "#2f3d4a", "#56656f", "#84929b"]
+      },
+      "grana": {
+        "role": "secondary",
+        "displayName": "Grana",
+        "canonical": "#e74c3c",
+        "tonalRamp": ["#3a0c0a", "#5c1613", "#7d201c", "#a02a24", "#c3362e", "#e74c3c", "#ef7b6f", "#f5b0a8"]
+      },
+      "grana-tinta": {
+        "role": "secondary",
+        "displayName": "Grana Tinta",
+        "canonical": "#c0392b",
+        "tonalRamp": ["#2f0a07", "#4c120e", "#6a1a14", "#87221a", "#a52b21", "#c0392b", "#d46658", "#e8a89e"]
+      },
+      "papel": {
+        "role": "neutral",
+        "displayName": "Papel",
+        "canonical": "#f8f9fa"
+      },
+      "blanco": {
+        "role": "neutral",
+        "displayName": "Blanco",
+        "canonical": "#ffffff"
+      },
+      "trazo": {
+        "role": "neutral",
+        "displayName": "Trazo",
+        "canonical": "#e1e4e8"
+      },
+      "acero": {
+        "role": "neutral",
+        "displayName": "Acero",
+        "canonical": "#7f8c8d"
+      },
+      "acero-tinta": {
+        "role": "neutral",
+        "displayName": "Acero Tinta",
+        "canonical": "#55636d"
+      },
+      "escenario": {
+        "role": "neutral",
+        "displayName": "Escenario",
+        "canonical": "#eef1f5"
+      },
+      "tiza": {
+        "role": "neutral",
+        "displayName": "Tiza",
+        "canonical": "#f1f2f6"
+      },
+      "tiza-trazo": {
+        "role": "neutral",
+        "displayName": "Tiza Trazo",
+        "canonical": "#dcdde1"
+      }
+    },
+    "typographyMeta": {
+      "ui": {
+        "displayName": "UI Control",
+        "purpose": "Textos de selects."
+      },
+      "seg": {
+        "displayName": "Segmented Button",
+        "purpose": "Botones del segmento de género."
+      },
+      "button-text": {
+        "displayName": "Button Text",
+        "purpose": "Texto del botón Reset."
+      },
+      "label": {
+        "displayName": "Field Label",
+        "purpose": "Etiquetas de control en mayúsculas con tracking."
+      },
+      "meta": {
+        "displayName": "Meta",
+        "purpose": "Contador de progreso y estado de traje completo."
+      },
+      "carousel-title": {
+        "displayName": "Carousel Title",
+        "purpose": "Nombres de capa; la activa vira a grana-tinta con punto grana."
+      },
+      "drop-overlay": {
+        "displayName": "Drop Overlay",
+        "purpose": "Feedback de soltar la prenda, visible solo durante el arrastre."
+      }
+    },
+    "shadows": [
+      {
+        "name": "drag-clone",
+        "value": "0 12px 22px rgba(0,0,0,0.32)",
+        "purpose": "Única elevación del sistema; despega el fantasma de la prenda durante el arrastre."
+      }
+    ],
+    "motion": [
+      {
+        "name": "state-350ms",
+        "value": "0.35s cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Barra de progreso: transform scaleX desde el origen izquierdo."
+      },
+      {
+        "name": "state-200ms",
+        "value": "0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Opacidad del drop overlay."
+      },
+      {
+        "name": "hover-180ms",
+        "value": "0.18s ease",
+        "purpose": "Transiciones de hover/focus en controles y miniaturas."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "768px",
+        "purpose": "Apilado móvil: controles a ancho completo, progreso (barra elástica a ancho completo) y Reset a ancho completo, carruseles en estantes horizontales de 48px con columna de títulos fija de 90px, gap 2px y padding 8px 12px 8px, escenario limitado a 60vh."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Gender Segmented Control",
+      "kind": "custom",
+      "refersTo": "seg-active",
+      "description": "Selector de género en dos botones; el activo es la noche de fiesta.",
+      "html": "<div class=\"ds-seg-group\" role=\"group\" aria-label=\"Género\"><button type=\"button\" class=\"ds-seg is-active\" aria-pressed=\"true\">Mujer</button><button type=\"button\" class=\"ds-seg\" aria-pressed=\"false\">Hombre</button></div>",
+      "css": ".ds-seg-group { display: inline-flex; align-items: center; gap: 2px; background: #f8f9fa; border: 1px solid #e1e4e8; border-radius: 8px; padding: 3px; } .ds-seg { appearance: none; background: transparent; border: none; color: #55636d; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; font-size: 0.88rem; font-weight: 600; padding: 9px 16px; border-radius: 6px; cursor: pointer; } .ds-seg.is-active { background: #2c3e50; color: #ffffff; } .ds-seg:hover:not(.is-active) { background: #f1f2f6; color: #2c3e50; } .ds-seg:focus-visible { outline: 2px solid #c0392b; outline-offset: 2px; }"
+    },
+    {
+      "name": "Select Field",
+      "kind": "custom",
+      "refersTo": "select",
+      "description": "Botón combobox propio (no select nativo) con chevron que rota 180°, lista listbox absoluta dentro del widget, 16px en móvil.",
+      "html": "<label class=\"ds-label\" for=\"ds-region\">Grupo Regional</label><div class=\"ds-select-wrap\"><button type=\"button\" class=\"ds-trigger\" id=\"ds-region\" aria-haspopup=\"listbox\" aria-expanded=\"false\" aria-controls=\"ds-menu\"><span class=\"ds-value\">Todos los grupos</span><svg class=\"ds-chevron\" viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"6 9 12 15 18 9\"></polyline></svg></button><ul class=\"ds-menu\" id=\"ds-menu\" role=\"listbox\" hidden><li class=\"ds-option\" role=\"option\" aria-selected=\"true\">Todos los grupos</li><li class=\"ds-option\" role=\"option\" aria-selected=\"false\">Badajoz - Gala</li></ul></div>",
+      "css": ".ds-label { display: block; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #55636d; margin-bottom: 6px; } .ds-select-wrap { position: relative; } .ds-trigger { appearance: none; background: #ffffff; color: #2c3e50; border: 1px solid #e1e4e8; border-radius: 8px; padding: 10px 34px 10px 12px; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; font-size: 0.9rem; font-weight: 500; min-height: 42px; width: 100%; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; text-align: left; } .ds-trigger:focus-visible { outline: 2px solid #c0392b; outline-offset: 1px; } .ds-trigger[aria-expanded=\"true\"] .ds-chevron { transform: rotate(180deg); } .ds-menu { position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 30; background: #ffffff; border: 1px solid #e1e4e8; border-radius: 8px; list-style: none; margin: 0; padding: 4px; max-height: 260px; overflow-y: auto; } .ds-option { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 6px; font-size: 0.88rem; font-weight: 500; color: #2c3e50; cursor: pointer; } .ds-option::before { content: \"\"; width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; border: 1px solid #dcdde1; } .ds-option[aria-selected=\"true\"] { font-weight: 600; color: #1a252f; } .ds-option[aria-selected=\"true\"]::before { background: #e74c3c; border-color: #e74c3c; }"
+    },
+    {
+      "name": "Reset Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Botón ghost editorial que limpia el estado; a ancho completo en móvil.",
+      "html": "<button class=\"ds-btn-reset\"><svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"3 6 5 6 21 6\"></polyline><path d=\"M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2\"></path></svg>Reset</button>",
+      "css": ".ds-btn-reset { display: inline-flex; align-items: center; gap: 7px; background: #ffffff; color: #2c3e50; border: 1px solid #e1e4e8; border-radius: 8px; padding: 10px 14px; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; font-size: 0.85rem; font-weight: 600; min-height: 42px; cursor: pointer; } .ds-btn-reset:hover { background: #f8f9fa; border-color: #dcdde1; color: #1a252f; } .ds-btn-reset:focus-visible { outline: 2px solid #c0392b; outline-offset: 2px; }"
+    },
+    {
+      "name": "Progress Indicator",
+      "kind": "custom",
+      "refersTo": "meta",
+      "description": "Barra pastilla con relleno grana animado por transform; completa en grana-tinta. En móvil la barra se estira a ancho completo hasta la etiqueta.",
+      "html": "<div class=\"ds-progress\"><div class=\"ds-progress-track\" aria-hidden=\"true\"><div class=\"ds-progress-fill\" style=\"transform: scaleX(0.43)\"></div></div><span class=\"ds-progress-label\">3 de 7 piezas</span></div>",
+      "css": ".ds-progress { display: flex; align-items: center; gap: 10px; } .ds-progress-track { width: 96px; height: 6px; border-radius: 999px; background: #f1f2f6; overflow: hidden; } .ds-progress-fill { height: 100%; width: 100%; background: #e74c3c; border-radius: 999px; transform-origin: left center; transform: scaleX(0); transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1); } .ds-progress-label { font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; font-size: 0.8rem; font-weight: 600; color: #55636d; white-space: nowrap; } .ds-progress.is-complete .ds-progress-label { color: #c0392b; }"
+    },
+    {
+      "name": "Thumbnail Tile",
+      "kind": "chip",
+      "refersTo": "thumbnail",
+      "description": "Ficha de prenda del carrusel; la equipada se desatura y gana badge grana.",
+      "html": "<div class=\"ds-thumb\" role=\"button\" tabindex=\"0\"><svg viewBox=\"0 0 24 24\" width=\"34\" height=\"34\" fill=\"none\" stroke=\"#2c3e50\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 3h12l1 4-3 2-1-4\"></path><path d=\"M9 3l1 4-3-2-1 4\"></path><path d=\"M4 17h16\"></path><path d=\"M7 17v4h10v-4\"></path></svg></div>",
+      "css": ".ds-thumb { position: relative; width: 72px; height: 72px; background: #f1f2f6; border: 1px solid #dcdde1; border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; touch-action: pan-x; cursor: grab; } .ds-thumb:hover { border-color: #7f8c8d; } .ds-thumb:focus-visible { outline: 2px solid #c0392b; outline-offset: 2px; } .ds-thumb.is-equipped img { opacity: 0.5; filter: grayscale(100%); } .ds-thumb.is-equipped::after { content: \"\"; position: absolute; top: -4px; right: -4px; width: 20px; height: 20px; border-radius: 50%; background: #e74c3c; border: 2px solid #ffffff; }"
+    },
+    {
+      "name": "Drop Overlay",
+      "kind": "custom",
+      "refersTo": "drop-overlay",
+      "description": "Feedback de soltar la prenda; solo visible durante el drag-over.",
+      "html": "<div class=\"ds-drop-overlay\">Suelta la prenda / Arrastra fuera para quitarla</div>",
+      "css": ".ds-drop-overlay { background: rgba(231, 76, 60, 0.10); color: #c0392b; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; font-size: 1.2rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 24px; opacity: 0; transition: opacity 0.2s; } .ds-drop-overlay::before { content: \"\"; width: 60px; height: 3px; background: repeating-linear-gradient(90deg, #e74c3c 0 6px, transparent 6px 12px); } .ds-drop-overlay.is-active { opacity: 1; }"
+    },
+    {
+      "name": "Drag Clone",
+      "kind": "custom",
+      "refersTo": "drag-clone",
+      "description": "Fantasma de la prenda durante el arrastre; la única elevación del sistema, girado -4°.",
+      "html": "<img class=\"ds-drag-clone\" src=\"https://via.placeholder.com/120\" alt=\"Prenda\">",
+      "css": ".ds-drag-clone { position: fixed; width: 120px; height: 120px; object-fit: contain; pointer-events: none; transform: translate(-50%, -50%) rotate(-4deg); filter: drop-shadow(0 12px 22px rgba(0, 0, 0, 0.32)); opacity: 0.96; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "El Baúl del Folclore",
+    "overview": "Un baúl de tradición que se abre sobre una mesa de periódico: los acentos folclóricos viven en un marco editorial sobrio. El widget se comporta como una pieza de contenido de una cabecera Vocento — nunca como un banner ni como un juego infantil de pegatinas. El folclore habla por sus piezas (las prendas reales del maniquí); la interfaz se retira y solo asiste.\n\nLa firma artesanal es la costura: una línea discontinua en grana que cose el widget por su borde superior, se repite como guion bajo el overlay de soltar la prenda y se sugiere en el punto de la siguiente pieza. Es la única referencia al folclore material del baúl; todo lo demás es papel, blanco y trazo de 1px.\n\nEl sistema es plano por defecto: la única profundidad aparece en el fantasma de arrastre. Los controles son táctiles y confiados — segmento de género, selects altos (42px), miniaturas de 72px y un indicador de progreso que cuenta \"X de Y piezas\" hasta el \"¡Traje completo!\". Todo operable con dedo, ratón y teclado.",
+    "keyCharacteristics": [
+      "Costura grana discontinua como única firma artesanal; resto de la superficie editorial sobria.",
+      "Un único acento (grana) reservado al acto de vestir; su tinta (grana-tinta) para textos sobre blanco.",
+      "Plano por defecto; profundidad solo durante el arrastre (fantasma girado -4° con la única sombra del sistema).",
+      "Género como control segmentado; grupo regional en select con chevron propio.",
+      "Progreso visible \"X de Y piezas\" con barra, hasta el estado de traje completo.",
+      "Canvas virtual 2816×1536 escalado por anchura; capas siempre alineadas.",
+      "Aislado bajo #regional-dressup-widget; el bloqueo de scroll durante el arrastre también está acotado al widget."
+    ],
+    "rules": [
+      {
+        "name": "The Grana Rule",
+        "body": "El grana señala el acto de vestir (feedback de equipar, siguiente pieza, progreso) y cose el widget en la costura superior. En reposo, fuera de la costura, ocupa menos del 10% de la superficie; su rareza es el punto.",
+        "section": "colors"
+      },
+      {
+        "name": "The One-Line Rule",
+        "body": "Los bordes son siempre de 1px y silenciosos. Nada más grueso, nada con más presencia que el propio maniquí.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ink Rule",
+        "body": "Todo texto en grana sobre blanco usa grana-tinta; el grana puro queda reservado a formas, barras y ornamentos.",
+        "section": "colors"
+      },
+      {
+        "name": "The Flat-By-Default Rule",
+        "body": "Las superficies descansan planas. Las sombras aparecen solo como respuesta a estado (arrastre, no hover).",
+        "section": "elevation"
+      },
+      {
+        "name": "The Motion Budget Rule",
+        "body": "Una sola pieza de movimiento autoral: el fantasma que se despega. El resto son transiciones de estado de ≤0.35s. Con prefers-reduced-motion, todo se congela.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do mantener el canvas plano y alineado: nunca posicionar capas fuera del sistema de coordenadas del canvas virtual escalado.",
+      "Do reservar el grana para el acto de vestir; su tinta (grana-tinta) para cualquier texto grana sobre blanco.",
+      "Do usar la costura discontinua como única firma artesanal; que el resto sea papel y trazo de 1px.",
+      "Do dejar que la prenda caiga donde se suelta (coordenadas centradas bajo el puntero) en el drag desde el carrusel.",
+      "Do dar hit targets generosos: controles ≥42px, miniaturas ≥48px en móvil y Reset a ancho completo.",
+      "Do animar la barra de progreso con transform: scaleX, nunca con width/height.",
+      "Do hacer las miniaturas accesibles por teclado (tabindex, Enter/Espacio) y mostrar focus-visible.",
+      "Do preservar el scrollLeft del carrusel entre re-renders.",
+      "Do aislar todo estilo bajo #regional-dressup-widget, incluido el bloqueo de scroll durante el arrastre."
+    ],
+    "donts": [
+      "Don't añadir sombras en reposo; la profundidad solo existe durante el arrastre.",
+      "Don't usar más de un acento de color ni degradados publicitarios: el widget es contenido, no un banner.",
+      "Don't hardcodear el orden de las capas: el z-ordering sale de config.json.",
+      "Don't introducir fuentes decorativas ni patrones kitsch que compitan con la prenda.",
+      "Don't usar grana puro para texto pequeño sobre blanco (falla AA).",
+      "Don't permitir que el CSS global del host rompa la caja del widget."
+    ]
+  }
+}

@@ -1,75 +1,33 @@
-# AGENTS.md - Codebase Guidelines & Agent Operating Manual
+# AGENTS.md
 
-This repository contains the **Juego de Prendas Regionales** application. This document serves as the authoritative operational guide for AI coding agents and subagents working in this codebase.
+## Project Shape
+- This is a standalone Vanilla JS dress-up widget, not a framework app. Keep production dependencies at zero unless explicitly requested.
+- Runtime entrypoint is `src/main.js`; Vite builds it as an IIFE library named `RegionalDressupWidget` into `dist/widget.js` via `vite.config.js`.
+- `src/main.js` imports `src/styles.css?inline`, injects it once as `<style id="dressup-styles">`, fetches `data-config-url`, writes `getWidgetHTML()`, then calls `initGame(container, config)`.
+- Local dev host is `index.html`, which uses `<div id="regional-dressup-widget" data-config-url="/config.json">` and loads `/src/main.js`.
 
----
+## Commands
+- Install: `npm install`.
+- Dev server: `npm run dev`.
+- Production build: `npm run build`; this is the only configured verification command. There are no lint, test, typecheck, or CI configs in this repo.
+- Preview built output: `npm run preview`.
 
-## 🎯 Project Purpose & Architecture
+## Widget Constraints
+- Preserve the single-file production bundle: Vite config must continue outputting `dist/widget.js` with `formats: ['iife']`, `inlineDynamicImports: true`, and CSS imported inline.
+- Keep widget CSS scoped to `#regional-dressup-widget` or widget-owned classes. This bundle is intended to be embedded in external CMS pages with hostile/global CSS.
+- Do not move widget logic into `index.html`; keep structure in `src/components/htmlTemplate.js`, startup in `src/main.js`, and interaction/state logic in `src/components/gameLogic.js`.
 
-`juego-prendas-regionales` is a standalone, client-side web application (Dress-Up Game) for regional traditional clothing (e.g., traditional attire from Badajoz and Cáceres).
+## Game Logic Gotchas
+- The visual stage is a fixed virtual canvas of `2816 x 1536` in `.stage-inner-canvas`; `ResizeObserver` scales it by `stageOuter.clientWidth / 2816` and sets `.stage-outer` height to `1536 * ratio`.
+- Equipped item coordinates are stored in unscaled virtual-canvas pixels: `state.equipped[typeId] = { regionId, x, y }`. Pointer deltas from canvas drags must be divided by the current scale.
+- Asset URLs are generated, not listed: `${config.baseUrl}${regionId}-${gender}-${typeId}.png`; mannequin backgrounds use `${config.baseUrl}${config.genders[gender].bg}`.
+- Clothing layer order comes from `config.genders[gender].types[*].zIndex`; avoid hard-coding type order outside config.
+- Pointer/touch support is implemented with Pointer Events on thumbnails and equipped images. Preserve left-mouse filtering, document-level `pointermove`/`pointerup`, and cleanup of listeners/body class after drags.
 
-### Core Technologies
-- **HTML5**: Semantic component container (`#regional-dressup-widget`).
-- **Vanilla CSS3**: Isolated scoped CSS inside `index.html` with modern flex layout, transitions, and CSS variables (`--primary-color`, `--highlight-color`, etc.).
-- **Vanilla JavaScript (ES6+)**: Self-contained IIFE controlling game state, pointer events, dynamic canvas scaling, and UI carousel rendering.
+## Config And Assets
+- The shipped sample config is `dist/config.json`; runtime config is remote through the widget container’s `data-config-url`.
+- Adding a region/type requires matching image files following `[regionId]-[gender]-[typeId].png` under `baseUrl`, plus any mannequin `bg` filenames referenced by config.
 
----
-
-## 📐 Key Components & Data Flow
-
-### 1. Canvas & Stage (`.stage-inner-canvas`)
-- Virtual resolution: **2816px × 1536px**.
-- Responsive scaling: Scales dynamically via `ResizeObserver` based on container width (`ratio = clientWidth / 2816`).
-- Image layer positioning: Managed via absolute coordinates (`itemData.x`, `itemData.y`) relative to canvas space.
-
-### 2. State Model (`state`)
-```javascript
-{
-  gender: 'mujer' | 'hombre',
-  region: 'all' | 'badajoz-gala' | 'caceres-gala' | string,
-  equipped: {
-    [typeId]: { regionId: string, x: number, y: number }
-  }
-}
-```
-
-### 3. Layering System (Z-Index)
-Clothing items are stacked strictly according to their `zIndex` definitions in `config.genders[gender].types`:
-- **Mujer**: Medias (2), Camisa (3), Falda (4), Zapatos (5), Complementos (6), Cabeza (7), Accesorio (8).
-- **Hombre**: Pantalón (2), Camisa (3), Faja (4), Zapatos (5), Accesorio (6).
-
-### 4. Asset URL Generation
-Assets are dynamically fetched from the base URL configured in `config.baseUrl`:
-`${config.baseUrl}${regionId}-${gender}-${typeId}.png`
-
----
-
-## 🤖 Guidelines for AI Agents
-
-When working on this repository, all AI agents must follow these rules:
-
-1. **Preserve Compatibility & Standalone Architecture**:
-   - Keep the component modular so it can be embedded directly into editorial pages or standalone wrappers.
-   - Do not introduce heavy framework dependencies (React, Vue, etc.) unless explicitly requested by the user.
-
-2. **Pointer & Touch Handling**:
-   - Pointer drag mechanisms use unified PointerEvents (`pointerdown`, `pointermove`, `pointerup`). Ensure touch actions and mouse drag functionality remain compatible across mobile and desktop browsers.
-
-3. **CSS Scoping**:
-   - Maintain styles within `#regional-dressup-widget` to prevent style leakage when embedded into external CMS or web pages.
-
-4. **Code Quality & Refactoring**:
-   - Maintain exact variable names and contract structures.
-   - Test UI interaction state changes (`state.equipped`, `gender`, `region`) when introducing new clothing items or regions.
-
-5. **Verification Steps**:
-   - Validate HTML markup and syntax when editing `index.html`.
-   - Ensure image URL generation matches existing naming conventions (`<regionId>-<gender>-<typeId>.png`).
-
----
-
-## 🛠️ Task Execution Workflow for Agents
-
-1. **Research & Inspect**: Always read `index.html` and relevant assets before modifying UI logic or layer ordering.
-2. **Implement**: Apply targeted modifications using line replacement tools.
-3. **Verify**: Ensure proper balance of HTML tags, JS closures, and CSS definitions.
+## Before Finishing
+- Run `npm run build` after changes to `src/`, `vite.config.js`, or config assumptions that affect bundling.
+- For `gameLogic.js` changes, manually reason through or browser-test: gender switch clears equipped state, region filter only changes carousels, reset clears equipped state, quick thumbnail click toggles equip, drag outside stage removes equipped clothing.

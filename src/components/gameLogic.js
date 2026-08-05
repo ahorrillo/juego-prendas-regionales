@@ -5,19 +5,29 @@ export function initGame(container, config) {
 
   const dom = {
     widgetContainer: container,
-    genderSel: container.querySelector('#gender-select'),
-    regionSel: container.querySelector('#region-select'),
+    genderGroup: container.querySelector('#gender-select'),
+    genderButtons: Array.from(container.querySelectorAll('.seg-btn')),
+    regionTrigger: container.querySelector('#region-trigger'),
+    regionValue: container.querySelector('#region-value'),
+    regionMenu: container.querySelector('#region-menu'),
     resetBtn: container.querySelector('#reset-btn'),
     mannequinBg: container.querySelector('#mannequin-bg'),
     clothesLayers: container.querySelector('#clothes-layers'),
     carouselsContainer: container.querySelector('#carousels-container'),
     stageOuter: container.querySelector('#drop-zone'),
-    canvas2816: container.querySelector('#canvas-2816')
+    canvas2816: container.querySelector('#canvas-2816'),
+    progressWrap: container.querySelector('#outfit-progress'),
+    progressLabel: container.querySelector('#progress-label'),
+    progressFill: container.querySelector('#progress-fill')
   };
 
   function updateCanvasScale() {
     const availableWidth = dom.stageOuter.clientWidth;
-    const ratio = availableWidth / 2816;
+    let ratio = availableWidth / 2816;
+    const maxHeight = parseFloat(window.getComputedStyle(dom.stageOuter).maxHeight);
+    if (Number.isFinite(maxHeight) && maxHeight > 0) {
+      ratio = Math.min(ratio, maxHeight / 1536);
+    }
     dom.canvas2816.style.transform = `scale(${ratio})`;
     dom.stageOuter.style.height = `${1536 * ratio}px`;
   }
@@ -29,20 +39,114 @@ export function initGame(container, config) {
   }
 
   function populateRegions() {
-    config.regions.forEach(reg => {
-      const opt = document.createElement('option');
-      opt.value = reg.id;
-      opt.textContent = reg.name;
-      dom.regionSel.appendChild(opt);
-    });
+    const addOption = (value, label, selected) => {
+      const li = document.createElement('li');
+      li.className = 'select-option';
+      li.id = `region-option-${value}`;
+      li.dataset.value = value;
+      li.setAttribute('role', 'option');
+      li.setAttribute('aria-selected', String(selected));
+      li.textContent = label;
+      dom.regionMenu.appendChild(li);
+    };
+    addOption('all', 'Todos los grupos', true);
+    config.regions.forEach(reg => addOption(reg.id, reg.name, false));
+  }
+
+  let activeRegionIndex = 0;
+  function getRegionOptions() {
+    return Array.from(dom.regionMenu.querySelectorAll('.select-option'));
+  }
+  function openRegionMenu() {
+    dom.regionMenu.hidden = false;
+    dom.regionTrigger.setAttribute('aria-expanded', 'true');
+    const opts = getRegionOptions();
+    activeRegionIndex = Math.max(0, opts.findIndex(o => o.dataset.value === state.region));
+    updateRegionActive(opts);
+  }
+  function updateRegionActive(opts) {
+    opts.forEach((o, i) => o.classList.toggle('is-active', i === activeRegionIndex));
+    const active = opts[activeRegionIndex];
+    if (active) dom.regionTrigger.setAttribute('aria-activedescendant', active.id);
+  }
+  function closeRegionMenu(returnFocus) {
+    if (dom.regionMenu.hidden) {
+      if (returnFocus) dom.regionTrigger.focus();
+      return;
+    }
+    dom.regionMenu.hidden = true;
+    dom.regionTrigger.setAttribute('aria-expanded', 'false');
+    dom.regionTrigger.removeAttribute('aria-activedescendant');
+    getRegionOptions().forEach(o => o.classList.remove('is-active'));
+    if (returnFocus) dom.regionTrigger.focus();
+  }
+  function selectRegionOption(opt) {
+    state.region = opt.dataset.value;
+    dom.regionValue.textContent = opt.textContent;
+    getRegionOptions().forEach(o => o.setAttribute('aria-selected', String(o === opt)));
+    renderCarousels();
+    closeRegionMenu(false);
   }
 
   function bindEvents() {
-    dom.genderSel.addEventListener('change', (e) => {
-      state.gender = e.target.value; state.equipped = {}; renderApp();
+    dom.genderButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (state.gender === btn.dataset.gender) return;
+        state.gender = btn.dataset.gender;
+        state.equipped = {};
+        dom.genderButtons.forEach(b => {
+          const active = b === btn;
+          b.classList.toggle('is-active', active);
+          b.setAttribute('aria-pressed', String(active));
+        });
+        renderApp();
+      });
     });
-    dom.regionSel.addEventListener('change', (e) => {
-      state.region = e.target.value; renderCarousels();
+    dom.regionTrigger.addEventListener('click', () => {
+      if (dom.regionMenu.hidden) openRegionMenu(); else closeRegionMenu(false);
+    });
+    dom.regionMenu.addEventListener('click', (e) => {
+      const opt = e.target.closest('.select-option');
+      if (opt) selectRegionOption(opt);
+    });
+    dom.regionTrigger.addEventListener('keydown', (e) => {
+      if (dom.regionMenu.hidden) {
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          openRegionMenu();
+        }
+        return;
+      }
+      const opts = getRegionOptions();
+      const last = opts.length - 1;
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        activeRegionIndex = activeRegionIndex >= last ? 0 : activeRegionIndex + 1;
+        updateRegionActive(opts);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        activeRegionIndex = activeRegionIndex <= 0 ? last : activeRegionIndex - 1;
+        updateRegionActive(opts);
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        activeRegionIndex = 0;
+        updateRegionActive(opts);
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        activeRegionIndex = last;
+        updateRegionActive(opts);
+      } else if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        const opt = opts[activeRegionIndex];
+        if (opt) selectRegionOption(opt);
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        closeRegionMenu(true);
+      }
+    });
+    document.addEventListener('pointerdown', (e) => {
+      if (dom.regionMenu.hidden) return;
+      if (!dom.regionTrigger.contains(e.target) && !dom.regionMenu.contains(e.target)) closeRegionMenu(false);
     });
     dom.resetBtn.addEventListener('click', () => {
       state.equipped = {}; renderApp();
@@ -56,11 +160,16 @@ export function initGame(container, config) {
   }
 
   function renderCarousels() {
+    const scrollPositions = new Map();
+    dom.carouselsContainer.querySelectorAll('.carousel-row').forEach((row, i) => {
+      const track = row.querySelector('.carousel-track');
+      if (track) scrollPositions.set(i, track.scrollLeft);
+    });
     dom.carouselsContainer.innerHTML = '';
     const types = config.genders[state.gender].types;
     const sortedTypes = [...types].sort((a,b) => a.zIndex - b.zIndex);
     const nextTypeToEquip = sortedTypes.find(t => !state.equipped[t.id]);
-    types.forEach(typeDef => {
+    types.forEach((typeDef, i) => {
       const row = document.createElement('div');
       row.className = 'carousel-row';
       if (nextTypeToEquip && nextTypeToEquip.id === typeDef.id) row.classList.add('is-next');
@@ -73,22 +182,44 @@ export function initGame(container, config) {
       regionsToShow.forEach(regionId => {
         track.appendChild(buildThumbnail(typeDef, regionId));
       });
+      const prevScroll = scrollPositions.get(i);
+      if (prevScroll) track.scrollLeft = prevScroll;
       row.appendChild(title);
       row.appendChild(track);
       dom.carouselsContainer.appendChild(row);
     });
   }
 
+  function toggleEquip(typeId, regionId) {
+    if (state.equipped[typeId]?.regionId === regionId) {
+      delete state.equipped[typeId];
+    } else {
+      state.equipped[typeId] = { regionId, x: 0, y: 0 };
+    }
+    renderEquippedClothes();
+    renderCarousels();
+  }
+
   function buildThumbnail(typeDef, regionId) {
     const el = document.createElement('div');
     el.className = 'item-thumbnail';
-    if (state.equipped[typeDef.id]?.regionId === regionId) el.classList.add('is-equipped');
+    const isEquipped = state.equipped[typeDef.id]?.regionId === regionId;
+    if (isEquipped) el.classList.add('is-equipped');
+    el.tabIndex = 0;
+    el.setAttribute('role', 'button');
+    el.setAttribute('aria-pressed', String(isEquipped));
     const imgUrl = `${config.baseUrl}${regionId}-${state.gender}-${typeDef.id}.png`;
-    el.innerHTML = `<img src="${imgUrl}" alt="${typeDef.label}">`;
+    el.innerHTML = `<img src="${imgUrl}" alt="${typeDef.label}">${isEquipped ? '<span class="thumb-badge"><svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>' : ''}`;
     el.addEventListener('pointerdown', (e) => {
       if (e.pointerType === 'mouse' && e.button !== 0) return;
       e.preventDefault();
+      el.setPointerCapture(e.pointerId);
       startThumbDrag(e, typeDef.id, regionId, imgUrl);
+    });
+    el.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      e.preventDefault();
+      toggleEquip(typeDef.id, regionId);
     });
     return el;
   }
@@ -99,8 +230,10 @@ export function initGame(container, config) {
     clone.className = 'drag-clone';
     thumbDrag = { typeId, regionId, clone, startX: e.clientX, startY: e.clientY, isDragging: false };
     document.body.classList.add('is-dressing-up');
+    dom.widgetContainer.classList.add('is-dressing-up');
     document.addEventListener('pointermove', onThumbMove);
     document.addEventListener('pointerup', onThumbUp);
+    document.addEventListener('pointercancel', onThumbCancel);
   }
 
   function onThumbMove(e) {
@@ -130,24 +263,50 @@ export function initGame(container, config) {
     const rect = dom.stageOuter.getBoundingClientRect();
     const isInside = (e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom);
     if (!thumbDrag.isDragging) {
-      if (state.equipped[thumbDrag.typeId]?.regionId === thumbDrag.regionId) {
-        delete state.equipped[thumbDrag.typeId];
-      } else {
-        state.equipped[thumbDrag.typeId] = { regionId: thumbDrag.regionId, x: 0, y: 0 };
-      }
-    } else {
-      if (isInside) {
-        state.equipped[thumbDrag.typeId] = { regionId: thumbDrag.regionId, x: 0, y: 0 };
-      }
+      toggleEquip(thumbDrag.typeId, thumbDrag.regionId);
+    } else if (isInside) {
+      const scale = dom.stageOuter.clientWidth / 2816;
+      const halfW = (thumbDrag.clone.naturalWidth || 0) / 2;
+      const halfH = (thumbDrag.clone.naturalHeight || 0) / 2;
+      state.equipped[thumbDrag.typeId] = {
+        regionId: thumbDrag.regionId,
+        x: (e.clientX - rect.left) / scale - halfW,
+        y: (e.clientY - rect.top) / scale - halfH
+      };
+      renderEquippedClothes();
+      renderCarousels();
     }
-    renderEquippedClothes();
-    renderCarousels();
+    cleanupThumbDrag();
+  }
+
+  function onThumbCancel() {
+    if (!thumbDrag) return;
+    cleanupThumbDrag();
+  }
+
+  function cleanupThumbDrag() {
     if (thumbDrag.clone.parentNode) thumbDrag.clone.remove();
     dom.stageOuter.classList.remove('drag-over');
     document.body.classList.remove('is-dressing-up');
+    dom.widgetContainer.classList.remove('is-dressing-up');
     document.removeEventListener('pointermove', onThumbMove);
     document.removeEventListener('pointerup', onThumbUp);
+    document.removeEventListener('pointercancel', onThumbCancel);
     thumbDrag = null;
+  }
+
+  function renderProgress() {
+    const types = config.genders[state.gender].types;
+    const equippedCount = types.filter(t => state.equipped[t.id]).length;
+    const total = types.length;
+    dom.progressFill.style.transform = `scaleX(${equippedCount / total})`;
+    if (equippedCount === total) {
+      dom.progressLabel.textContent = '¡Traje completo!';
+      dom.progressWrap.classList.add('is-complete');
+    } else {
+      dom.progressLabel.textContent = `${equippedCount} de ${total} piezas`;
+      dom.progressWrap.classList.remove('is-complete');
+    }
   }
 
   function renderEquippedClothes() {
@@ -167,18 +326,23 @@ export function initGame(container, config) {
           if (e.pointerType === 'mouse' && e.button !== 0) return;
           e.preventDefault();
           e.stopPropagation();
+          img.setPointerCapture(e.pointerId);
+          img.style.touchAction = 'none';
           const scale = dom.stageOuter.clientWidth / 2816;
           canvasDrag = {
             typeId: typeDef.id, img, startX: e.clientX, startY: e.clientY,
             initialX: itemData.x, initialY: itemData.y, scale, isDragging: false
           };
           document.body.classList.add('is-dressing-up');
+          dom.widgetContainer.classList.add('is-dressing-up');
           document.addEventListener('pointermove', onCanvasMove);
           document.addEventListener('pointerup', onCanvasUp);
+          document.addEventListener('pointercancel', onCanvasCancel);
         });
         dom.clothesLayers.appendChild(img);
       }
     });
+    renderProgress();
   }
 
   function onCanvasMove(e) {
@@ -219,13 +383,24 @@ export function initGame(container, config) {
         delete state.equipped[canvasDrag.typeId];
       }
     }
-    dom.stageOuter.classList.remove('drag-over');
-    document.body.classList.remove('is-dressing-up');
-    document.removeEventListener('pointermove', onCanvasMove);
-    document.removeEventListener('pointerup', onCanvasUp);
-    canvasDrag = null;
+    cleanupCanvasDrag();
     renderEquippedClothes();
     renderCarousels();
+  }
+
+  function onCanvasCancel() {
+    if (!canvasDrag) return;
+    cleanupCanvasDrag();
+  }
+
+  function cleanupCanvasDrag() {
+    dom.stageOuter.classList.remove('drag-over');
+    document.body.classList.remove('is-dressing-up');
+    dom.widgetContainer.classList.remove('is-dressing-up');
+    document.removeEventListener('pointermove', onCanvasMove);
+    document.removeEventListener('pointerup', onCanvasUp);
+    document.removeEventListener('pointercancel', onCanvasCancel);
+    canvasDrag = null;
   }
 
   populateRegions();

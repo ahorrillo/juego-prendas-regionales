@@ -3,15 +3,15 @@ import { getWidgetHTML } from './components/htmlTemplate.js';
 import { initGame } from './components/gameLogic.js';
 
 function injectStyles() {
-  if (document.getElementById('rjw-styles')) return;
+  if (document.getElementById('dressup-styles')) return;
   const styleEl = document.createElement('style');
-  styleEl.id = 'rjw-styles';
+  styleEl.id = 'dressup-styles';
   styleEl.textContent = cssStyles;
   document.head.appendChild(styleEl);
 }
 
 async function startWidget() {
-  console.log('RJW: 🚀 Invocando startWidget...');
+  console.log('🚀 Invocando startWidget...');
   const container = document.getElementById('regional-dressup-widget');
   if (!container) return;
 
@@ -24,12 +24,11 @@ async function startWidget() {
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const config = await response.json();
 
-    container.classList.add('rjw-container');
     container.innerHTML = getWidgetHTML();
     initGame(container, config);
-    console.log('RJW: ✅ Juego cargado con éxito');
+    console.log('✅ Juego cargado con éxito');
   } catch (error) {
-    console.error('RJW Error:', error);
+    console.error('Dressup Widget Error:', error);
   }
 }
 

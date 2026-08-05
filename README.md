@@ -40,7 +40,7 @@ stageOuter.style.height = `${1536 * ratio}px`;
 
 ### 2. Aislamiento e Inyección CSS
 
-El CSS no se distribuye como un archivo separado. Durante la compilación con Vite, los estilos se procesan de forma *inline* e inyectan dinámicamente en el `<head>` del DOM únicamente si no existen previamente (`#rjw-styles`), garantizando que la aplicación sea 100% *plug and play*.
+El CSS no se distribuye como un archivo separado. Durante la compilación con Vite, los estilos se procesan de forma *inline* e inyectan dinámicamente en el `<head>` del DOM únicamente si no existen previamente (`#dressup-styles`), garantizando que la aplicación sea 100% *plug and play*.
 
 ---
 
@@ -52,7 +52,7 @@ El CSS no se distribuye como un archivo separado. Durante la compilación con Vi
 │   ├── components/
 │   │   ├── gameLogic.js      # Lógica de arrastre (Pointer Events), canvas y estados
 │   │   └── htmlTemplate.js   # Generación de la plantilla HTML del widget
-│   ├── styles.css            # Estilos del widget aislados (prefijo rjw-)
+│   ├── styles.css            # Estilos del widget aislados
 │   └── main.js               # Punto de entrada principal e inyector del widget
 ├── dist/                     # Archivos compilados listos para producción
 │   ├── config.json           # Configuración remota de prendas, regiones y rutas
@@ -115,10 +115,9 @@ Puedes añadir o editar nuevos trajes, regiones, capas o géneros modificando el
 
 ```json
 {
-  "baseUrl": "[https://raw.githubusercontent.com/ahorrillo/juego-prendas-regionales/main/img/](https://raw.githubusercontent.com/ahorrillo/juego-prendas-regionales/main/img/)",
+  "baseUrl": "https://raw.githubusercontent.com/ahorrillo/juego-prendas-regionales/refs/heads/main/img/",
   "regions": [
-    { "id": "badajoz-gala", "name": "Badajoz - Gala" },
-    { "id": "caceres-traje", "name": "Cáceres - Tradicional" }
+    { "id": "badajoz-gala", "name": "Badajoz - Gala" }
   ],
   "genders": {
     "mujer": {
@@ -127,15 +126,20 @@ Puedes añadir o editar nuevos trajes, regiones, capas o géneros modificando el
         { "id": "medias", "label": "Medias", "zIndex": 2 },
         { "id": "camisa", "label": "Camisa", "zIndex": 3 },
         { "id": "falda", "label": "Falda", "zIndex": 4 },
-        { "id": "cabeza", "label": "Cabeza", "zIndex": 7 }
+        { "id": "zapatos", "label": "Zapatos", "zIndex": 5 },
+        { "id": "complementos", "label": "Complementos", "zIndex": 6 },
+        { "id": "cabeza", "label": "Cabeza", "zIndex": 7 },
+        { "id": "accesorio", "label": "Accesorio", "zIndex": 8 }
       ]
     },
     "hombre": {
       "bg": "maniqui-hombre.png",
       "types": [
-        { "id": "calzas", "label": "Calzas", "zIndex": 2 },
+        { "id": "pantalon", "label": "Pantalón", "zIndex": 2 },
         { "id": "camisa", "label": "Camisa", "zIndex": 3 },
-        { "id": "chaleco", "label": "Chaleco", "zIndex": 4 }
+        { "id": "faja", "label": "Faja", "zIndex": 4 },
+        { "id": "zapatos", "label": "Zapatos", "zIndex": 5 },
+        { "id": "accesorio", "label": "Accesorio", "zIndex": 6 }
       ]
     }
   }
@@ -149,6 +153,84 @@ El sistema construye las URLs dinámicamente siguiendo el estándar:
 `[baseUrl][regionId]-[gender]-[typeId].png`
 
 *Ejemplo:* `https://.../img/badajoz-gala-mujer-camisa.png`
+
+> 📌 Para la guía completa de cómo añadir un nuevo grupo regional (paso a paso, con la tabla de archivos y los requisitos de las imágenes), consulta la sección [Añadir un Nuevo Grupo Regional](#-añadir-un-nuevo-grupo-regional).
+
+---
+
+## ➕ Añadir un Nuevo Grupo Regional
+
+Añadir un grupo regional (por ejemplo, un traje nuevo de Cáceres) requiere **dos pasos**: crear las imágenes con el nombre correcto y registrarlas en el `config.json`.
+
+### Paso 1: Prepara las imágenes
+
+El widget construye las URLs dinámicamente con el patrón:
+
+```
+[baseUrl][regionId]-[gender]-[typeId].png
+```
+
+Cada región debe tener **una imagen por cada tipo de cada género**. Con la configuración de ejemplo (mujer: 7 tipos, hombre: 5 tipos) son **12 imágenes por región**:
+
+| Tipo | Género | Ejemplo de archivo |
+| :--- | :---: | :--- |
+| medias | mujer | `caceres-fiesta-mujer-medias.png` |
+| camisa | mujer | `caceres-fiesta-mujer-camisa.png` |
+| falda | mujer | `caceres-fiesta-mujer-falda.png` |
+| zapatos | mujer | `caceres-fiesta-mujer-zapatos.png` |
+| complementos | mujer | `caceres-fiesta-mujer-complementos.png` |
+| cabeza | mujer | `caceres-fiesta-mujer-cabeza.png` |
+| accesorio | mujer | `caceres-fiesta-mujer-accesorio.png` |
+| pantalon | hombre | `caceres-fiesta-hombre-pantalon.png` |
+| camisa | hombre | `caceres-fiesta-hombre-camisa.png` |
+| faja | hombre | `caceres-fiesta-hombre-faja.png` |
+| zapatos | hombre | `caceres-fiesta-hombre-zapatos.png` |
+| accesorio | hombre | `caceres-fiesta-hombre-accesorio.png` |
+
+**Requisitos de las imágenes:**
+
+- **Formato:** PNG con fondo transparente. Las prendas son recortes; el maniquí (`genders[gender].bg`) es la única imagen con fondo.
+- **Escala:** todas las capas se posicionan sobre un lienzo virtual de **2816×1536 px**. El recorte de la prenda debe estar a la misma escala que el maniquí para que al equiparla quede alineada sobre el cuerpo. No hace falta que el archivo tenga 2816×1536: puede ser el tamaño del recorte de la prenda; al soltarla, el widget la centra bajo el puntero/dedo.
+- **Ubicación:** guárdalas en la carpeta a la que apunta `baseUrl` (en la config de ejemplo, `img/` del repositorio). El `regionId` del nombre debe coincidir exactamente con el `id` que registres en el config.
+- **Maniquí de fondo:** los maniquíes son comunes por género (`maniqui-mujer.png`, `maniqui-hombre.png`), apuntados desde `genders.mujer.bg` y `genders.hombre.bg`. Si quieres maniquíes propios, sube los PNG y cambia esas rutas.
+
+> **Importante:** el widget no filtra prendas por región: el carrusel muestra las miniaturas de **todas** las regiones para cada tipo del género activo. Si a una región le falta la imagen de un tipo, su miniatura aparecerá rota (404). Prepara siempre el juego completo de imágenes de los tipos que quieras publicar.
+
+### Paso 2: Registra la región en el `config.json`
+
+Añade una entrada al array `regions`:
+
+```json
+{
+  "id": "caceres-fiesta",
+  "name": "Cáceres - Fiesta"
+}
+```
+
+Ejemplo completo con la nueva región:
+
+```json
+{
+  "baseUrl": "https://tuservidor.com/img/",
+  "regions": [
+    { "id": "badajoz-gala", "name": "Badajoz - Gala" },
+    { "id": "caceres-fiesta", "name": "Cáceres - Fiesta" }
+  ],
+  "genders": {
+    "mujer": { "bg": "maniqui-mujer.png", "types": [ ... ] },
+    "hombre": { "bg": "maniqui-hombre.png", "types": [ ... ] }
+  }
+}
+```
+
+Si tu integración sirve el `config.json` desde tu propio host (vía `data-config-url`), actualiza esa copia. La copia de ejemplo de este repositorio vive en `dist/config.json`.
+
+### Paso 3: Verifica
+
+1. `npm run dev` y comprueba que las miniaturas nuevas cargan sin errores 404.
+2. Equipa una prenda de la nueva región y arrástrala sobre el maniquí.
+3. Cambia de género y repite: ambos géneros deben tener sus imágenes.
+4. Cuando esté listo, `npm run build` para regenerar `dist/widget.js` y publica siguiendo la sección de [Control de Versiones](#-control-de-versiones-y-despliegue).
 
 ---
 
