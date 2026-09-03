@@ -2,7 +2,7 @@
 
 [![Vite](https://img.shields.io/badge/Vite-ES6+-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![Vanilla JS](https://img.shields.io/badge/Vanilla_JS-Zero_Dependencies-F7DF1E?logo=javascript&logoColor=black)](https://developer.mozilla.org/)
-[![jsDelivr CDN](https://img.shields.io/badge/jsDelivr-v1.1.4-E24D4B?logo=jsdelivr&logoColor=white)](https://www.jsdelivr.com/package/gh/)
+[![jsDelivr CDN](https://img.shields.io/badge/jsDelivr-v1.1.5-E24D4B?logo=jsdelivr&logoColor=white)](https://www.jsdelivr.com/package/gh/)
 [![Vocento](https://img.shields.io/badge/Licencia-Vocento-002D62?style=flat-square)](https://www.vocento.com/)
 
 Un widget interactivo estilo *Paper Dolls* (juego de vestir) desarrollado en **Vanilla JavaScript ES6+**, **CSS Scoped** y empaquetado con **Vite**, diseñado para la difusión cultural, museos digitales o probadores virtuales.
@@ -74,7 +74,7 @@ Para resistir los estilos globales hostiles de los CMS donde se embebe (que suel
 ### 1. Clonar el repositorio e instalar dependencias
 
 ```bash
-git clone [https://github.com/ahorrillo/juego-prendas-regionales.git](https://github.com/ahorrillo/juego-prendas-regionales.git)
+git clone https://github.com/ahorrillo/juego-prendas-regionales.git
 cd juego-prendas-regionales
 npm install
 ```
@@ -102,14 +102,14 @@ Para integrar el widget en cualquier sitio web, añade el contenedor con la ruta
 ```html
 <!-- 1. Contenedor del Widget -->
 <div id="regional-dressup-widget"
-     data-config-url="[https://cdn.jsdelivr.net/gh/ahorrillo/juego-prendas-regionales@v1.0.7/dist/config.json](https://cdn.jsdelivr.net/gh/ahorrillo/juego-prendas-regionales@v1.0.7/dist/config.json)">
+     data-config-url="https://cdn.jsdelivr.net/gh/ahorrillo/juego-prendas-regionales@v1.1.5/dist/config.json">
 </div>
 
 <!-- 2. Script del Widget -->
-<script src="[https://cdn.jsdelivr.net/gh/ahorrillo/juego-prendas-regionales@v1.0.7/dist/widget.js](https://cdn.jsdelivr.net/gh/ahorrillo/juego-prendas-regionales@v1.0.7/dist/widget.js)"></script>
+<script src="https://cdn.jsdelivr.net/gh/ahorrillo/juego-prendas-regionales@v1.1.5/dist/widget.js"></script>
 ```
 
-> **Nota importante:** Se recomienda utilizar siempre un **Tag de Git** (ej: `@v1.0.7`) en las URLs de jsDelivr en lugar de `@main` para evitar retrasos en la actualización por caché de CDN.
+> **Nota importante:** Se recomienda utilizar siempre un **Tag de Git** (ej: `@v1.1.5`) en las URLs de jsDelivr en lugar de `@main` para evitar retrasos en la actualización por caché de CDN.
 
 ---
 
@@ -121,7 +121,10 @@ Puedes añadir o editar nuevos trajes, regiones, capas o géneros modificando el
 {
   "baseUrl": "https://raw.githubusercontent.com/ahorrillo/juego-prendas-regionales/refs/heads/main/img/",
   "regions": [
-    { "id": "badajoz-gala", "name": "Badajoz - Gala" }
+    { "id": "castuera", "name": "Castuera" },
+    { "id": "don-benito", "name": "Don Benito" },
+    { "id": "montehermoso", "name": "Montehermoso" },
+    { "id": "torrejoncillo", "name": "Torrejoncillo" }
   ],
   "genders": {
     "mujer": {
@@ -133,7 +136,7 @@ Puedes añadir o editar nuevos trajes, regiones, capas o géneros modificando el
         { "id": "zapatos", "label": "Zapatos", "zIndex": 5 },
         { "id": "complementos", "label": "Complementos", "zIndex": 6 },
         { "id": "cabeza", "label": "Cabeza", "zIndex": 7 },
-        { "id": "accesorio", "label": "Accesorio", "zIndex": 8 }
+        { "id": "accesorio", "label": "Mantón", "zIndex": 8 }
       ]
     },
     "hombre": {
@@ -142,8 +145,7 @@ Puedes añadir o editar nuevos trajes, regiones, capas o géneros modificando el
         { "id": "pantalon", "label": "Pantalón", "zIndex": 2 },
         { "id": "camisa", "label": "Camisa", "zIndex": 3 },
         { "id": "faja", "label": "Faja", "zIndex": 4 },
-        { "id": "zapatos", "label": "Zapatos", "zIndex": 5 },
-        { "id": "accesorio", "label": "Accesorio", "zIndex": 6 }
+        { "id": "accesorio", "label": "Accesorio", "zIndex": 5 }
       ]
     }
   }
@@ -156,7 +158,7 @@ El sistema construye las URLs dinámicamente siguiendo el estándar:
 
 `[baseUrl][regionId]-[gender]-[typeId].png`
 
-*Ejemplo:* `https://.../img/badajoz-gala-mujer-camisa.png`
+*Ejemplo:* `https://.../img/montehermoso-mujer-camisa.png`
 
 > 📌 Para la guía completa de cómo añadir un nuevo grupo regional (paso a paso, con la tabla de archivos y los requisitos de las imágenes), consulta la sección [Añadir un Nuevo Grupo Regional](#-añadir-un-nuevo-grupo-regional).
 
@@ -174,7 +176,7 @@ El widget construye las URLs dinámicamente con el patrón:
 [baseUrl][regionId]-[gender]-[typeId].png
 ```
 
-Cada región debe tener **una imagen por cada tipo de cada género**. Con la configuración de ejemplo (mujer: 7 tipos, hombre: 5 tipos) son **12 imágenes por región**:
+Cada región debe tener **una imagen por cada tipo de cada género**. Con la configuración actual (mujer: 7 tipos, hombre: 4 tipos) son **11 imágenes por región**:
 
 | Tipo | Género | Ejemplo de archivo |
 | :--- | :---: | :--- |
@@ -188,7 +190,6 @@ Cada región debe tener **una imagen por cada tipo de cada género**. Con la con
 | pantalon | hombre | `caceres-fiesta-hombre-pantalon.png` |
 | camisa | hombre | `caceres-fiesta-hombre-camisa.png` |
 | faja | hombre | `caceres-fiesta-hombre-faja.png` |
-| zapatos | hombre | `caceres-fiesta-hombre-zapatos.png` |
 | accesorio | hombre | `caceres-fiesta-hombre-accesorio.png` |
 
 **Requisitos de las imágenes:**
@@ -217,7 +218,10 @@ Ejemplo completo con la nueva región:
 {
   "baseUrl": "https://tuservidor.com/img/",
   "regions": [
-    { "id": "badajoz-gala", "name": "Badajoz - Gala" },
+    { "id": "castuera", "name": "Castuera" },
+    { "id": "don-benito", "name": "Don Benito" },
+    { "id": "montehermoso", "name": "Montehermoso" },
+    { "id": "torrejoncillo", "name": "Torrejoncillo" },
     { "id": "caceres-fiesta", "name": "Cáceres - Fiesta" }
   ],
   "genders": {
@@ -248,12 +252,12 @@ npm run build
 
 # 2. Guardar cambios en Git
 git add .
-git commit -m "Publicada nueva versión v1.0.7"
+git commit -m "Publicada nueva versión v1.1.5"
 git push origin main
 
 # 3. Crear y publicar Tag
-git tag v1.0.7
-git push origin v1.0.7
+git tag v1.1.5
+git push origin v1.1.5
 ```
 
 ---

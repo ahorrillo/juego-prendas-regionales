@@ -29,12 +29,12 @@ Difusión cultural de la vestimenta tradicional regional mediante un juego de ca
 ## Capabilities and Constraints
 
 - Dos géneros (mujer/hombre); capas de prenda definidas por género con orden `zIndex` en la configuración.
-- Regiones actuales en config: `badajoz-gala` (existen assets de `caceres-gala` en `img/` sin incorporar a config).
+- Regiones completas e integradas en config: `castuera`, `don-benito`, `montehermoso`, `torrejoncillo`.
 - Interacciones: arrastrar del carrusel al maniquí, toque/clic rápido para equipar, arrastrar una prenda equipada para reposicionarla y arrastrarla fuera del escenario para quitarla. Cambiar de género limpia el estado equipado; el filtro de región solo cambia los carruseles; reset limpia el estado.
 - Coordenadas de prendas equipadas en píxeles del canvas virtual sin escalar; los deltas de puntero se dividen por el scale actual.
 - Cero dependencias en producción; bundle único IIFE `dist/widget.js` con CSS inline inyectable en cualquier página.
 - Sin API pública ni eventos propios: el widget arranca solo sobre el contenedor.
-- Decisiones abiertas: añadir regiones/tipos requiere imágenes acordes; incorporar Cáceres a config es una decisión de producto pendiente.
+- Release v1.1.5 lista para producción con los 4 grupos regionales extremeños completamente operativos.
 
 ## Brand Commitments
 

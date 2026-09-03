@@ -1,7 +1,10 @@
 {
   "baseUrl": "https://raw.githubusercontent.com/ahorrillo/juego-prendas-regionales/refs/heads/main/img/",
   "regions": [
-    { "id": "badajoz-gala", "name": "Badajoz - Gala" }
+    { "id": "castuera", "name": "Castuera" },
+    { "id": "don-benito", "name": "Don Benito" },
+    { "id": "montehermoso", "name": "Montehermoso" },
+    { "id": "torrejoncillo", "name": "Torrejoncillo" }
   ],
   "genders": {
     "mujer": {
@@ -13,7 +16,7 @@
         { "id": "zapatos", "label": "Zapatos", "zIndex": 5 },
         { "id": "complementos", "label": "Complementos", "zIndex": 6 },
         { "id": "cabeza", "label": "Cabeza", "zIndex": 7 },
-        { "id": "accesorio", "label": "Accesorio", "zIndex": 8 }
+        { "id": "accesorio", "label": "Mantón", "zIndex": 8 }
       ]
     },
     "hombre": {
@@ -22,8 +25,7 @@
         { "id": "pantalon", "label": "Pantalón", "zIndex": 2 },
         { "id": "camisa", "label": "Camisa", "zIndex": 3 },
         { "id": "faja", "label": "Faja", "zIndex": 4 },
-        { "id": "zapatos", "label": "Zapatos", "zIndex": 5 },
-        { "id": "accesorio", "label": "Accesorio", "zIndex": 6 }
+        { "id": "accesorio", "label": "Accesorio", "zIndex": 5 }
       ]
     }
   }
