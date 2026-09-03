@@ -2,7 +2,7 @@
 
 [![Vite](https://img.shields.io/badge/Vite-ES6+-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![Vanilla JS](https://img.shields.io/badge/Vanilla_JS-Zero_Dependencies-F7DF1E?logo=javascript&logoColor=black)](https://developer.mozilla.org/)
-[![jsDelivr CDN](https://img.shields.io/badge/jsDelivr-v1.1.5-E24D4B?logo=jsdelivr&logoColor=white)](https://www.jsdelivr.com/package/gh/)
+[![jsDelivr CDN](https://img.shields.io/badge/jsDelivr-v1.1.6-E24D4B?logo=jsdelivr&logoColor=white)](https://www.jsdelivr.com/package/gh/)
 [![Vocento](https://img.shields.io/badge/Licencia-Vocento-002D62?style=flat-square)](https://www.vocento.com/)
 
 Un widget interactivo estilo *Paper Dolls* (juego de vestir) desarrollado en **Vanilla JavaScript ES6+**, **CSS Scoped** y empaquetado con **Vite**, diseñado para la difusión cultural, museos digitales o probadores virtuales.
@@ -102,14 +102,14 @@ Para integrar el widget en cualquier sitio web, añade el contenedor con la ruta
 ```html
 <!-- 1. Contenedor del Widget -->
 <div id="regional-dressup-widget"
-     data-config-url="https://cdn.jsdelivr.net/gh/ahorrillo/juego-prendas-regionales@v1.1.5/dist/config.json">
+     data-config-url="https://cdn.jsdelivr.net/gh/ahorrillo/juego-prendas-regionales@v1.1.6/dist/config.json">
 </div>
 
 <!-- 2. Script del Widget -->
-<script src="https://cdn.jsdelivr.net/gh/ahorrillo/juego-prendas-regionales@v1.1.5/dist/widget.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/ahorrillo/juego-prendas-regionales@v1.1.6/dist/widget.js"></script>
 ```
 
-> **Nota importante:** Se recomienda utilizar siempre un **Tag de Git** (ej: `@v1.1.5`) en las URLs de jsDelivr en lugar de `@main` para evitar retrasos en la actualización por caché de CDN.
+> **Nota importante:** Se recomienda utilizar siempre un **Tag de Git** (ej: `@v1.1.6`) en las URLs de jsDelivr en lugar de `@main` para evitar retrasos en la actualización por caché de CDN.
 
 ---
 
@@ -252,12 +252,12 @@ npm run build
 
 # 2. Guardar cambios en Git
 git add .
-git commit -m "Publicada nueva versión v1.1.5"
+git commit -m "Publicada nueva versión v1.1.6"
 git push origin main
 
 # 3. Crear y publicar Tag
-git tag v1.1.5
-git push origin v1.1.5
+git tag v1.1.6
+git push origin v1.1.6
 ```
 
 ---

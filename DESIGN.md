@@ -86,7 +86,7 @@ components:
   thumbnail:
     backgroundColor: "{colors.tiza}"
     rounded: "{rounded.lg}"
-    size: "72px"
+    size: "80px"
   thumbnail-small:
     size: "48px"
 ---
@@ -101,7 +101,7 @@ Un baúl de tradición que se abre sobre una mesa de periódico: los acentos fol
 
 La firma artesanal es la **costura**: una línea discontinua en grana que cose el widget por su borde superior, se repite como guion bajo el overlay de soltar la prenda y se sugiere en el punto de la siguiente pieza. Es la única referencia al folclore material del baúl; todo lo demás es papel, blanco y trazo de 1px.
 
-El sistema es plano por defecto: la única profundidad aparece en el fantasma de arrastre. Los controles son táctiles y confiados — segmento de género, selects altos (42px), miniaturas de 72px y un indicador de progreso que cuenta "X de Y piezas" hasta el "¡Traje completo!". Todo operable con dedo, ratón y teclado.
+El sistema es plano por defecto: la única profundidad aparece en el fantasma de arrastre. Los controles son táctiles y confiados — segmento de género, selects altos (42px), miniaturas de 80px y un indicador de progreso que cuenta "X de Y piezas" hasta el "¡Traje completo!". Todo operable con dedo, ratón y teclado.
 
 **Key Characteristics:**
 - Costura grana discontinua como única firma artesanal; resto de la superficie editorial sobria.
@@ -157,7 +157,7 @@ Paleta de periódico neutra con una pareja de acentos folclóricos: una noche de
 
 ## Layout
 
-Contenedor de columna simple de ancho máximo 1200px, con borde de 1px, radio 10px y la costura superior. Bandas apiladas: controles, escenario y carruseles. La barra de controles alinea a la izquierda el segmento de género y el grupo regional, y empuja a la derecha el progreso y el Reset (gap 14px). El escenario ocupa el 100% del ancho del contenedor y mantiene la proporción 2816×1536 del canvas virtual escalado por `ResizeObserver`. Los carruseles son filas con una columna de título (118px) y un track horizontal desplazable con snap; el scroll del track se preserva entre re-renders.
+Contenedor de columna simple de ancho máximo 1200px, con borde de 1px, radio 10px y la costura superior. Bandas apiladas: controles, escenario y carruseles. La barra de controles alinea a la izquierda el segmento de género y el grupo regional, y empuja a la derecha el progreso y el Reset (gap 14px). El escenario ocupa el 100% del ancho del contenedor y mantiene la proporción 2816×1536 del canvas virtual escalado por `ResizeObserver`. Los carruseles son filas con una columna de título (110px) y un track horizontal desplazable con snap; el scroll del track se preserva entre re-renders.
 
 En ≤768px: controles apilados a ancho completo (segmento de género y select llenos, etiqueta de grupo sobre el select); el progreso (con barra elástica a ancho completo hasta la etiqueta) y el Reset pasan a ancho completo en filas propias; los carruseles se compactan en estantes horizontales de 48px (columna de título fija de 90px a la izquierda, track desplazable, gap 2px, padding 8px 12px 8px) para no competir con el escenario; el escenario se limita a 60vh.
 
@@ -177,7 +177,7 @@ En ≤768px: controles apilados a ancho completo (segmento de género y select l
 
 ## Shapes
 
-Lenguaje de esquinas suaves y contenidas: 6px para el interior del segmento de género, 8px para controles (selects, botón, tracks), 10px para el contenedor y las miniaturas, y pastilla completa (999px) para la barra de progreso. Las miniaturas son fichas cuadradas de 72px (48px en móvil, el mínimo táctil) con borde de 1px en tiza-trazo; la equipada se desatura al 50% y gana un badge circular grana con borde blanco en su esquina. El escenario, sin esquinas, ocupa todo el ancho: el lienzo es el marco y no tiene marco.
+Lenguaje de esquinas suaves y contenidas: 6px para el interior del segmento de género, 8px para controles (selects, botón, tracks), 10px para el contenedor y las miniaturas, y pastilla completa (999px) para la barra de progreso. Las miniaturas son fichas cuadradas de 80px (48px en móvil, el mínimo táctil) con borde de 1px en tiza-trazo; la equipada se desatura al 50% y gana un badge circular grana con borde blanco en su esquina. El escenario, sin esquinas, ocupa todo el ancho: el lienzo es el marco y no tiene marco.
 
 ## Components
 
@@ -204,13 +204,13 @@ Lenguaje de esquinas suaves y contenidas: 6px para el interior del segmento de g
 - **Mobile:** la barra se estira a ancho completo de la fila, hasta la etiqueta (sin `max-width`).
 
 ### Carousel Rows
-- **Title column:** fija (118px en desktop, 90px en móvil con tracking 0.04em), `flex-shrink: 0`, uppercase; derecha en desktop, izquierda en móvil. El ancho fijo garantiza que las miniaturas de todas las filas queden alineadas verticalmente aunque un nombre sea más largo (p. ej. "Complementos"). La fila `is-next` vira el título a grana-tinta con un punto grana y tiñe el fondo del track (grana 4%).
-- **Track:** scroll horizontal con `scroll-snap-type: x mandatory`, scrollbar fino, padding 8px 4px 12px (en móvil 4px 0 8px), radio 8px.
+- **Title column:** fija (110px en desktop, 90px en móvil con tracking 0.04em), `flex-shrink: 0`, uppercase; derecha en desktop, izquierda en móvil. El ancho fijo garantiza que las miniaturas de todas las filas queden alineadas verticalmente aunque un nombre sea más largo (p. ej. "Complementos"). La fila `is-next` vira el título a grana-tinta con un punto grana y tiñe el fondo del track (grana 4%).
+- **Track:** scroll horizontal con `scroll-snap-type: x mandatory`, scrollbar fino, padding 4px 2px 8px (en móvil 4px 0 8px), radio 8px.
 
 ### Thumbnails
 - **Corner Style:** 10px.
 - **Background:** tiza con borde 1px tiza-trazo; la fila siguiente usa borde grana translúcido sobre blanco.
-- **Content:** la prenda recortada, `object-fit: contain`, `transform: scale(2.2)`, centrada.
+- **Content:** la prenda recortada, `object-fit: contain`, `transform: scale(1.2)`, centrada.
 - **State equipada:** desaturación + opacidad 0.5 + badge circular grana con check blanco.
 - **Access:** `tabindex="0"`, `role="button"`, `aria-pressed`; Enter/Espacio equipan; focus-visible con outline grana.
 - **Touch:** `touch-action: pan-x` para que el carrusel siga desplazándose sin pelear con el gesto.

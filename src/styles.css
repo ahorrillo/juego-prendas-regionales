@@ -167,21 +167,21 @@ body.is-dressing-up, body.is-dressing-up * { cursor: grabbing !important; }
     background: repeating-linear-gradient(90deg, var(--grana) 0 6px, transparent 6px 12px) !important;
 }
 
-#regional-dressup-widget .dressup-carousels { padding: 18px 20px 22px !important; background: var(--blanco) !important; border-top: 1px solid var(--trazo) !important; display: flex !important; flex-direction: column !important; gap: 14px !important; }
+#regional-dressup-widget .dressup-carousels { padding: 14px 18px !important; background: var(--blanco) !important; border-top: 1px solid var(--trazo) !important; display: flex !important; flex-direction: column !important; gap: 10px !important; }
 #regional-dressup-widget .carousel-row { display: flex !important; align-items: center !important; gap: 12px !important; }
 #regional-dressup-widget .carousel-title {
-    flex-shrink: 0 !important; width: 118px !important; font-size: 0.74rem !important; font-weight: 700 !important; text-transform: uppercase !important; letter-spacing: 0.07em !important;
+    flex-shrink: 0 !important; width: 110px !important; font-size: 0.74rem !important; font-weight: 700 !important; text-transform: uppercase !important; letter-spacing: 0.07em !important;
     color: var(--acero-tinta) !important; text-align: right !important;
 }
 #regional-dressup-widget .carousel-row.is-next .carousel-title {
     display: flex !important; align-items: center !important; gap: 6px !important; justify-content: flex-end !important; color: var(--grana-tinta) !important;
 }
 #regional-dressup-widget .carousel-row.is-next .carousel-title::before { content: "" !important; width: 6px !important; height: 6px !important; border-radius: 50% !important; background: var(--grana) !important; }
-#regional-dressup-widget .carousel-track { display: flex !important; flex: 1 !important; gap: 12px !important; overflow-x: auto !important; padding: 8px 4px 12px !important; scrollbar-width: thin !important; scroll-snap-type: x mandatory !important; border-radius: var(--radius-sm) !important; }
+#regional-dressup-widget .carousel-track { display: flex !important; flex: 1 !important; gap: 10px !important; overflow-x: auto !important; padding: 4px 2px 8px !important; scrollbar-width: thin !important; scroll-snap-type: x mandatory !important; border-radius: var(--radius-sm) !important; }
 #regional-dressup-widget .carousel-row.is-next .carousel-track { background: rgba(231, 76, 60, 0.04) !important; }
 
 #regional-dressup-widget .item-thumbnail {
-    position: relative !important; width: 72px !important; height: 72px !important; flex-shrink: 0 !important;
+    position: relative !important; width: 80px !important; height: 80px !important; flex-shrink: 0 !important;
     background: var(--tiza) !important; border: 1px solid var(--tiza-trazo) !important; border-radius: 10px !important; cursor: grab !important;
     scroll-snap-align: start !important; display: flex !important; align-items: center !important; justify-content: center !important; overflow: hidden !important;
     touch-action: pan-x !important; transition: border-color 0.18s !important;
@@ -191,7 +191,7 @@ body.is-dressing-up, body.is-dressing-up * { cursor: grabbing !important; }
 #regional-dressup-widget .carousel-row.is-next .item-thumbnail { border-color: rgba(231, 76, 60, 0.45) !important; background: var(--blanco) !important; }
 #regional-dressup-widget .item-thumbnail img {
     width: 100% !important; height: 100% !important; max-width: none !important;
-    object-fit: contain !important; transform: scale(2.2) !important; pointer-events: none !important; margin: 0 !important; padding: 0 !important;
+    object-fit: contain !important; transform: scale(1.2) !important; pointer-events: none !important; margin: 0 !important; padding: 0 !important;
     transition: opacity 0.18s, filter 0.18s !important;
 }
 #regional-dressup-widget .item-thumbnail.is-equipped { background: var(--papel) !important; }

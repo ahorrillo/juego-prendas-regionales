@@ -34,7 +34,7 @@ Difusión cultural de la vestimenta tradicional regional mediante un juego de ca
 - Coordenadas de prendas equipadas en píxeles del canvas virtual sin escalar; los deltas de puntero se dividen por el scale actual.
 - Cero dependencias en producción; bundle único IIFE `dist/widget.js` con CSS inline inyectable en cualquier página.
 - Sin API pública ni eventos propios: el widget arranca solo sobre el contenedor.
-- Release v1.1.5 lista para producción con los 4 grupos regionales extremeños completamente operativos.
+- Release v1.1.6 lista para producción con los 4 grupos regionales extremeños completamente operativos y visualización de carruseles optimizada.
 
 ## Brand Commitments
 
