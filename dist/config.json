@@ -1,7 +1,11 @@
 {
   "baseUrl": "https://raw.githubusercontent.com/ahorrillo/juego-prendas-regionales/refs/heads/main/img/",
   "regions": [
-    { "id": "badajoz-gala", "name": "Badajoz - Gala" }
+    { "id": "badajoz-gala", "name": "Badajoz - Gala" },
+    { "id": "castuera", "name": "Castuera" },
+    { "id": "don-benito", "name": "Don Benito" },
+    { "id": "montehermoso", "name": "Montehermoso" },
+    { "id": "torrejoncillo", "name": "Torrejoncillo" }
   ],
   "genders": {
     "mujer": {
